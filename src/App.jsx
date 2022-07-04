@@ -1,4 +1,5 @@
 import { Field, Form, Formik, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import logo from './logo.svg'
 import './App.css'
 
@@ -7,20 +8,12 @@ function handleSubmit(values) {
   console.log(values);
 }
 
-function validate(values) {
-  let errors = {};
-  if (values.origen.length === 0) {
-    errors.origen = 'Requerido';
-  }
-  if (values.destino.length === 0) {
-    errors.destino = 'Requerido';
-  }
-  if (values.ida.length === 0) {
-    errors.ida = 'Requerido';
-  }
+const newSearchSchema = Yup.object({
+  origen: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
+  destino: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
+  ida: Yup.string().required('Requerido'),
+});
 
-  return errors;
-}
 const App = () => {
   return (
     <div className='bg-white px-4 py-5 sm:px-6'>
@@ -33,7 +26,7 @@ const App = () => {
         boys: 0
       }}
         onSubmit={handleSubmit}
-        validate={validate}
+        validationSchema={newSearchSchema}
       >
         {(formik) => (
           <Form className="space-y-8 divide-y divide-gray-200">
