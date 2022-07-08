@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 import logo from './logo.svg'
 import './App.css'
 
+import AsyncSelectLocation from "./AsyncSelectLocation";
+
 function handleSubmit(values) {
   console.log('onSubmit');
   console.log(values);
@@ -42,11 +44,9 @@ const App = () => {
                       Origen (*)
                     </label>
                     <div className="mt-1">
-                      <Field
-                        name="origen"
-                        type="text"
-                        id="origen"
-                        className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ( (formik.touched.origen && formik.errors.origen) ? 'border-red-400 ring-red-400' : '') }
+                    <AsyncSelectLocation 
+                        onChange={ value => formik.setFieldValue('origen', value?.value ? value.value : '' ) }
+                        className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.origen && formik.errors.origen) ? 'border-red-400 ring-red-400' : '')}
                       />
                       <ErrorMessage name="origen" render={msg => <ErrorInput msg={msg} />} />
                     </div>
@@ -57,11 +57,9 @@ const App = () => {
                       Destino (*)
                     </label>
                     <div className="mt-1">
-                      <Field
-                        type="text"
-                        id="destino"
-                        name="destino"
-                        className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ( (formik.touched.destino && formik.errors.destino) ? 'border-red-400 ring-red-400' : '') }
+                    <AsyncSelectLocation 
+                        onChange={ value => formik.setFieldValue('destino', value?.value ? value.value : '' ) }
+                        className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.destino && formik.errors.destino) ? 'border-red-400 ring-red-400' : '')}
                       />
                       <ErrorMessage name="destino" render={msg => <ErrorInput msg={msg} />} />
                     </div>
@@ -76,7 +74,7 @@ const App = () => {
                         type="text"
                         id="ida"
                         name="ida"
-                        className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ( (formik.touched.ida && formik.errors.ida) ? 'border-red-400 ring-red-400' : '') }
+                        className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.ida && formik.errors.ida) ? 'border-red-400 ring-red-400' : '')}
                       />
                       <ErrorMessage name="ida" render={msg => <ErrorInput msg={msg} />} />
                     </div>
@@ -173,7 +171,6 @@ const App = () => {
 }
 
 const ErrorInput = ({ msg }) => {
-  console.log(msg)
   return (
     <span className='flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1'>{msg}</span>
   )
