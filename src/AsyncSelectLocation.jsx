@@ -21,16 +21,14 @@ const promiseOptions = (inputValue) =>
     }, 1000);
   });
 
-  export default ({ onChange, options, value, className }) => {
+export default ({ onChange, options, value, className }) => {
   return (
     <div className={className}>
       <AsyncSelect
         cacheOptions
-        // defaultOptions
         loadOptions={promiseOptions}
         isClearable
-
-        onChange={ value => onChange(value) }
+        onChange={value => onChange(value)}
       />
     </div>
   )

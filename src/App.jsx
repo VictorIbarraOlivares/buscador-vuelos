@@ -4,6 +4,7 @@ import logo from './logo.svg'
 import './App.css'
 
 import AsyncSelectLocation from "./AsyncSelectLocation";
+import DateInput from './DateInput';
 
 function handleSubmit(values) {
   console.log('onSubmit');
@@ -44,8 +45,8 @@ const App = () => {
                       Origen (*)
                     </label>
                     <div className="mt-1">
-                    <AsyncSelectLocation 
-                        onChange={ value => formik.setFieldValue('origen', value?.value ? value.value : '' ) }
+                      <AsyncSelectLocation
+                        onChange={value => formik.setFieldValue('origen', value?.value ? value.value : '')}
                         className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.origen && formik.errors.origen) ? 'border-red-400 ring-red-400' : '')}
                       />
                       <ErrorMessage name="origen" render={msg => <ErrorInput msg={msg} />} />
@@ -57,8 +58,8 @@ const App = () => {
                       Destino (*)
                     </label>
                     <div className="mt-1">
-                    <AsyncSelectLocation 
-                        onChange={ value => formik.setFieldValue('destino', value?.value ? value.value : '' ) }
+                      <AsyncSelectLocation
+                        onChange={value => formik.setFieldValue('destino', value?.value ? value.value : '')}
                         className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.destino && formik.errors.destino) ? 'border-red-400 ring-red-400' : '')}
                       />
                       <ErrorMessage name="destino" render={msg => <ErrorInput msg={msg} />} />
@@ -70,11 +71,11 @@ const App = () => {
                       Ida (*)
                     </label>
                     <div className="mt-1">
-                      <Field
-                        type="text"
-                        id="ida"
-                        name="ida"
-                        className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.ida && formik.errors.ida) ? 'border-red-400 ring-red-400' : '')}
+                      <DateInput
+                        onChange={value => formik.setFieldValue('ida', value ? value : '')}
+                        placeholder='Seleccione fecha de ida'
+
+                      // className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.ida && formik.errors.ida) ? 'border-red-400 ring-red-400' : '')}
                       />
                       <ErrorMessage name="ida" render={msg => <ErrorInput msg={msg} />} />
                     </div>
@@ -85,12 +86,18 @@ const App = () => {
                       Regreso
                     </label>
                     <div className="mt-1">
-                      <Field
+                      <DateInput
+                        onChange={value => formik.setFieldValue('regreso', value ? value : '')}
+                        placeholder='Seleccione fecha de regreso'
+
+                      // className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.regreso && formik.errors.regreso) ? 'border-red-400 ring-red-400' : '')}
+                      />
+                      {/* <Field
                         type="text"
                         id="regreso"
                         name="regreso"
                         className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      />
+                      /> */}
                     </div>
                   </div>
 
