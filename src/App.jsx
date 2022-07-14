@@ -5,16 +5,69 @@ import './App.css'
 
 import AsyncSelectLocation from "./AsyncSelectLocation";
 import DateInput from './DateInput';
+import qs from 'qs';
+import axios from 'axios';
+
+let token = '';
+
+const getTokenAmadeus = async () => {
+  try {
+    console.log('obteniendo token');
+    const response = await axios.post(
+      `https://test.api.amadeus.com/v1/security/oauth2/token`,
+      qs.stringify({
+        grant_type: 'client_credentials',
+        client_id: 'h46J0CS4MCoyAW0EpcMLUdCmO7652iqm', // variable de entorno
+        client_secret: 'XM71VjOqFYkRFMFy' // variable de entorno
+      }),
+      {
+        headers: {
+          "content-type": "application/x-www-form-urlencoded"
+        },
+      }
+    )
+    console.log('obtenido token:', response.data.access_token);
+    return response.data.access_token;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const searchFlightOffers = async (origen, destino, ida, adultos) => {
+  if (token === '') {
+    token = await getTokenAmadeus();
+  }
+
+  try {
+    const response = await axios.get(
+      `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origen}&destinationLocationCode=${destino}&departureDate=2022-11-01&adults=${adultos}&max=3&currencyCode=EUR`,
+      { headers: { 'Authorization': `Bearer ${token}` }}
+    );
+
+    console.log('response buscador vuelos', response);
+  } catch (error) {
+    console.error(error);
+    // console.error(error.response.data.errors[0].code);
+    if (error?.response?.data?.errors[0]?.code === 38192) {
+      console.log('obtener token (expiration');
+      token = await getTokenAmadeus();
+    } else {
+      console.error(error);
+    }
+  }
+}
 
 function handleSubmit(values) {
   console.log('onSubmit');
   console.log(values);
+  searchFlightOffers(values.origen, values.destino, values.ida, values.adultos);
 }
 
 const newSearchSchema = Yup.object({
   origen: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
   destino: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
   ida: Yup.string().required('Requerido'),
+  regreso: Yup.string(),
 });
 
 const App = () => {
