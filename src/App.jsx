@@ -5,63 +5,10 @@ import './App.css'
 
 import AsyncSelectLocation from "./AsyncSelectLocation";
 import DateInput from './DateInput';
-import qs from 'qs';
-import axios from 'axios';
-
-let token = '';
-
-const getTokenAmadeus = async () => {
-  try {
-    console.log('obteniendo token');
-    const response = await axios.post(
-      `https://test.api.amadeus.com/v1/security/oauth2/token`,
-      qs.stringify({
-        grant_type: 'client_credentials',
-        client_id: 'h46J0CS4MCoyAW0EpcMLUdCmO7652iqm', // variable de entorno
-        client_secret: 'XM71VjOqFYkRFMFy' // variable de entorno
-      }),
-      {
-        headers: {
-          "content-type": "application/x-www-form-urlencoded"
-        },
-      }
-    )
-    console.log('obtenido token:', response.data.access_token);
-    return response.data.access_token;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-const searchFlightOffers = async (origen, destino, ida, adultos) => {
-  if (token === '') {
-    token = await getTokenAmadeus();
-  }
-
-  try {
-    const response = await axios.get(
-      `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origen}&destinationLocationCode=${destino}&departureDate=2022-11-01&adults=${adultos}&max=3&currencyCode=EUR`,
-      { headers: { 'Authorization': `Bearer ${token}` }}
-    );
-
-    console.log('response buscador vuelos', response);
-  } catch (error) {
-    console.error(error);
-    // console.error(error.response.data.errors[0].code);
-    if (error?.response?.data?.errors[0]?.code === 38192) {
-      console.log('obtener token (expiration');
-      token = await getTokenAmadeus();
-    } else {
-      console.error(error);
-    }
-  }
-}
-
-function handleSubmit(values) {
-  console.log('onSubmit');
-  console.log(values);
-  searchFlightOffers(values.origen, values.destino, values.ida, values.adultos);
-}
+import { useState, useEffect } from 'react';
+import { getToken, apiCall } from './api';
+import { useDispatch } from 'react-redux';
+import { searchFlightsStart, searchFlights } from './redux/actions/results';
 
 const newSearchSchema = Yup.object({
   origen: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
@@ -71,6 +18,47 @@ const newSearchSchema = Yup.object({
 });
 
 const App = () => {
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const [token, setToken] = useState('');
+
+  const handleSubmit = async (values) => {
+    try {
+      
+      dispatch(searchFlights(values, token));
+
+      setIsLoading(true);
+      const response = await apiCall(
+        `v2/shopping/flight-offers?originLocationCode=${values.origen}&destinationLocationCode=${values.destino}&departureDate=2022-11-01&adults=${values.adultos}&max=3&currencyCode=EUR`,
+        token
+      );
+      setSearchResults(response?.data);
+
+      console.log('searchResults', searchResults);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const getTokenAmadeus = async () => {
+    try {
+      const response = await getToken();
+      setToken(response?.data?.access_token);
+    } catch (error) {
+      setError(error);
+    } 
+  }
+
+  useEffect(() => {
+    getTokenAmadeus();
+  },[]);
+  
   return (
     <div className='bg-white px-4 py-5 sm:px-6'>
       <Formik initialValues={{
@@ -127,8 +115,6 @@ const App = () => {
                       <DateInput
                         onChange={value => formik.setFieldValue('ida', value ? value : '')}
                         placeholder='Seleccione fecha de ida'
-
-                      // className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.ida && formik.errors.ida) ? 'border-red-400 ring-red-400' : '')}
                       />
                       <ErrorMessage name="ida" render={msg => <ErrorInput msg={msg} />} />
                     </div>
@@ -142,15 +128,7 @@ const App = () => {
                       <DateInput
                         onChange={value => formik.setFieldValue('regreso', value ? value : '')}
                         placeholder='Seleccione fecha de regreso'
-
-                      // className={"shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md " + ((formik.touched.regreso && formik.errors.regreso) ? 'border-red-400 ring-red-400' : '')}
                       />
-                      {/* <Field
-                        type="text"
-                        id="regreso"
-                        name="regreso"
-                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      /> */}
                     </div>
                   </div>
 
@@ -207,6 +185,7 @@ const App = () => {
 
             <div className="pt-5">
               <div className="flex justify-end">
+              {error && <span className="text-red-500 my-auto mr-4 font-medium">Ha ocurrido un error</span>}
                 <button
                   type="reset"
                   className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -216,10 +195,11 @@ const App = () => {
 
                 <button
                   type="submit"
-                  // disabled={isSubmitting}
-                  className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  disabled={isLoading}
+                  className={"ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + ((isLoading) ? "cursor-wait" : "")}
                 >
-                  Buscar
+                  {isLoading ? 'Buscando ...': 'Buscar'}
+                  {/* Buscar */}
                 </button>
               </div>
             </div>
