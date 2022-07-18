@@ -9,8 +9,8 @@ export async function getToken() {
       `${BASE_URL}v1/security/oauth2/token`,
       qs.stringify({
         grant_type: 'client_credentials',
-        client_id: 'h46J0CS4MCoyAW0EpcMLUdCmO7652iqm', // variable de entorno
-        client_secret: 'XM71VjOqFYkRFMFy' // variable de entorno
+        client_id: import.meta.env.VITE_CLIENT_ID,
+        client_secret: import.meta.env.VITE_CLIENT_SECRET
       }),
       { headers: { "content-type": "application/x-www-form-urlencoded" },}
     )

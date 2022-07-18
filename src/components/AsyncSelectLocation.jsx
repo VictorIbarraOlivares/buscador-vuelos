@@ -1,5 +1,5 @@
 import AsyncSelect from 'react-select/async';
-import { locationsData } from '../src/utils/locations';
+import { locationsData } from '../utils/locations';
 
 const locationsOptions = locationsData.map((location) => {
   return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
