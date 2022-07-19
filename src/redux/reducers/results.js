@@ -7,7 +7,7 @@ import {
 const initialState = {
   isLoading: false,
   data: [],
-  error: null
+  error: {}
 };
 
 const resultsReducer = (state = initialState, action) => {

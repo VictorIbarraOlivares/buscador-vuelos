@@ -4,9 +4,12 @@ import * as Yup from 'yup';
 import AsyncSelectLocation from '../components/AsyncSelectLocation';
 import DateInput from '../components/DateInput';
 import { useState, useEffect } from 'react';
-import { getToken, apiCall } from '../api';
-import { useDispatch } from 'react-redux';
+import { getToken } from '../api';
+import { useDispatch, useSelector } from 'react-redux';
 import { searchFlights } from '../redux/actions/results';
+import { useNavigate } from 'react-router-dom';
+
+import { isLoadingResults, resultsData, resultsError } from '../redux/selectors/results';
 
 
 const newSearchSchema = Yup.object({
@@ -17,32 +20,23 @@ const newSearchSchema = Yup.object({
 });
 
 const Index = () => {
-  const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const searchResults = useSelector( resultsData );
+  const isLoading = useSelector( isLoadingResults );
+  const error = useSelector( resultsError );
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [token, setToken] = useState('');
 
-  const handleSubmit = async (values) => {
-    try {
-      
-      dispatch(searchFlights(values, token));
-
-      setIsLoading(true);
-      const response = await apiCall(
-        `v2/shopping/flight-offers?originLocationCode=${values.origen}&destinationLocationCode=${values.destino}&departureDate=2022-11-01&adults=${values.adultos}&max=3&currencyCode=EUR`,
-        token
-      );
-      setSearchResults(response?.data);
-
-      console.log('searchResults', searchResults);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSubmit = (values) => {
+    console.log(values);
+    dispatch(searchFlights(values, token));
+    console.log('searchResults', searchResults);
+    // pasar los parametros de busqueda para mostrarlos en las ofertas de vuelo y en detalle de itinerario
+    // utilizarlos al momento de volver
+    console.error('pasar los parametros de busqueda a las otras paginas');
+    navigate('/flight-offers');
   }
 
   const getTokenAmadeus = async () => {
@@ -184,7 +178,7 @@ const Index = () => {
 
             <div className="pt-5">
               <div className="flex justify-end">
-              {error && <span className="text-red-500 my-auto mr-4 font-medium">Ha ocurrido un error</span>}
+              
                 <button
                   type="reset"
                   className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -197,8 +191,7 @@ const Index = () => {
                   disabled={isLoading}
                   className={"ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + ((isLoading) ? "cursor-wait" : "")}
                 >
-                  {isLoading ? 'Buscando ...': 'Buscar'}
-                  {/* Buscar */}
+                  Buscar
                 </button>
               </div>
             </div>

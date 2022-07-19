@@ -23,11 +23,12 @@ export const searchFlights = (searchParams, token) => async (dispatch) => {
   try {
     dispatch(searchFlightsStart());
     const response = await apiCall(
-      `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=2022-11-01&adults=${searchParams.adultos}&max=3&currencyCode=EUR`,
+      `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=2022-11-01&adults=${searchParams.adultos}&max=7&currencyCode=EUR`,
+      // `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=2022-11-01&adults=${searchParams.adultos}&currencyCode=EUR`,
       token
     );
     console.log('Action Creator(searchFlights) response', response);
-    dispatch(searchFlightsComplete(response?.data));
+    dispatch(searchFlightsComplete(response?.data?.data));
   } catch (error) {
     dispatch(searchFlightsError(error));
   }
