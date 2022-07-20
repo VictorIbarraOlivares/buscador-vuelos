@@ -4,7 +4,7 @@ const initialState = {
   isLoading: false,
   data: {},
   error: {}
-}
+};
 
 const detailSlice = createSlice({
   name: 'detailFlight',
@@ -13,16 +13,39 @@ const detailSlice = createSlice({
     getFlightStart(state) {
       state.isLoading = true;
     },
-    getFlightError(state, payload) {
+    getFlightError(state, action) {
       state.isLoading = false;
-      state.error = payload;
+      state.error = action.payload;
     },
-    getFlightComplete(state, payload) {
+    getFlightComplete(state, action) {
       state.isLoading = false;
-      state.data = payload;
+      state.data = action.payload;
     }
   }
 });
 
 export const { getFlightStart, getFlightError, getFlightComplete } = detailSlice.actions;
+
+// Actions creators
+export const getFlightDetail = (flightOffer) => async (dispatch) => {
+  try {
+    dispatch( getFlightStart() );
+    /**
+     * Se puede utilizar la API para validar el precio del vuelo, es necesario utilizar post y enviar la oferta
+     */
+    
+    console.log('flightOffer in Slice', flightOffer);
+
+    dispatch( getFlightComplete(flightOffer) );
+  } catch (error) {
+    dispatch( getFlightError(error) );
+  }
+};
+
+// selectors
+export const isLoadingFlightDetail = (state) => state.detailFlight.isLoading;
+export const flightDetailData = (state) => state.detailFlight.data;
+export const flightDetailError = (state) => state.detailFlight.error;
+
+
 export default detailSlice.reducer;

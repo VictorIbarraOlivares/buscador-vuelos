@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { CalendarIcon, LocationMarkerIcon, UsersIcon } from '@heroicons/react/solid';
+import { CalendarIcon, UsersIcon } from '@heroicons/react/solid';
 import { useDispatch, useSelector } from "react-redux";
 import { isLoadingResults, resultsData, resultsError } from '../redux/selectors/results';
-import { getFlighTDetail } from "../redux/actions/detail";
+import { getFlightDetail } from "../redux/slices/detail";
 
 const FlightOffers = () => {
   const flightOffers = useSelector( resultsData );
@@ -10,6 +10,12 @@ const FlightOffers = () => {
   const error = useSelector( resultsError );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { state } = useLocation();
+  const {
+    origen, destino, ida, regreso, adultos, boys
+  } = state;
+  console.log('mostrando lo que viene por state', origen, destino, ida, regreso, adultos, boys);
   console.log('flightOffers', flightOffers);
 
   if (isLoading) {
@@ -33,10 +39,14 @@ const FlightOffers = () => {
     )
   }
   const detail = (flightOffer) => {
-    console.log(flightOffer); //pasar a redux
-    // dispatch(getFlighTDetail (flightOffer, token));
-    dispatch( getFlighTDetail(flightOffer) );
-    navigate('/flight-offers/detail');
+    console.log('flightOffer llamado detail', flightOffer);
+    // dispatch(getFlightDetail (flightOffer, token));
+    dispatch( getFlightDetail(flightOffer) );
+    navigate('/flight-offers/detail',{
+      state: {
+
+      }
+    });
   }
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-md">
@@ -70,7 +80,6 @@ const FlightOffers = () => {
                   <div className="mt-2 flex items-center text-sm sm:mt-0">
                     <button
                       type="button"
-                      onClick={() => detail(flightOffer)}
                       className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
                     >
                       Ver itinerarios

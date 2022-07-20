@@ -1,11 +1,17 @@
-import { useSelector } from "react-redux";
-import { detailData, detailError, isLoadingDetail } from "../redux/selectors/detail";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getFlightDetail, isLoadingFlightDetail, flightDetailData, flightDetailError } from "../redux/slices/detail";
 
 const Detail = () => {
-  const flightOffer = useSelector( detailData );
-  const isLoading = useSelector( isLoadingDetail );
-  const error = useSelector( detailError );
-  console.log('flightOffer', flightOffer);
+  const dispatch = useDispatch();
+  const flightOffer = useSelector( flightDetailData );
+  const isLoading = useSelector( isLoadingFlightDetail );
+  const error = useSelector( flightDetailError );
+  console.log('flightOffer detail', flightOffer);
+
+  // useEffect(() => {
+  //   dispatch(getFlightDetail(flightOffer));
+  // }, []);
 
   if (isLoading) {
     return (

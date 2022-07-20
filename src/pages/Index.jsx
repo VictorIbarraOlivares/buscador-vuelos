@@ -36,7 +36,17 @@ const Index = () => {
     // pasar los parametros de busqueda para mostrarlos en las ofertas de vuelo y en detalle de itinerario
     // utilizarlos al momento de volver
     console.error('pasar los parametros de busqueda a las otras paginas');
-    navigate('/flight-offers');
+    navigate('/flight-offers', {
+      state: {
+        origen: values.origen,
+        destino: values.destino,
+        ida: values.ida,
+        regreso: values.regreso,
+        adultos: values.adultos,
+        boys: values.boys
+      }
+    }
+    );
   }
 
   const getTokenAmadeus = async () => {
