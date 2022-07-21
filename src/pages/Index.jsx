@@ -11,6 +11,11 @@ import { useNavigate } from 'react-router-dom';
 
 import { isLoadingResults, resultsData, resultsError } from '../redux/selectors/results';
 
+import { locationsData } from '../utils/locations';
+const locationsOptions = locationsData.map((location) => {
+  return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
+})
+
 
 const newSearchSchema = Yup.object({
   origen: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
@@ -20,9 +25,9 @@ const newSearchSchema = Yup.object({
 });
 
 const Index = () => {
-  const searchResults = useSelector( resultsData );
-  const isLoading = useSelector( isLoadingResults );
-  const error = useSelector( resultsError );
+  const searchResults = useSelector(resultsData);
+  const isLoading = useSelector(isLoadingResults);
+  const error = useSelector(resultsError);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,18 +35,37 @@ const Index = () => {
   const [token, setToken] = useState('');
 
   const handleSubmit = (values) => {
-    console.log(values);
+    // para el layout
+    const origen = locationsOptions.find(location => location.value === values.origen);
+    const destino = locationsOptions.find(location => location.value === values.destino);
+    const ida = values.ida.toLocaleDateString("es-CL", { day: 'numeric' }) + " " +
+      values.ida.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase()
+        .replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " +
+      values.ida.toLocaleDateString("es-CL", { year: 'numeric' });
+    const regreso = values.regreso !== '' ? values.regreso.toLocaleDateString("es-CL", { day: 'numeric' }) + " " +
+      values.regreso.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase()
+        .replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " +
+      values.regreso.toLocaleDateString("es-CL", { year: 'numeric' }) : '';
+
+    // para la api
+    values.ida = values.ida.toLocaleDateString("es-CL", { year: 'numeric' }) + "-" +
+      values.ida.toLocaleDateString("es-CL", { month: '2-digit' }) + "-" +
+      values.ida.toLocaleDateString("es-CL", { day: '2-digit' });
+    values.regreso = values.regreso !== '' ? values.regreso.toLocaleDateString("es-CL", { year: 'numeric' }) + "-" +
+      values.regreso.toLocaleDateString("es-CL", { month: '2-digit' }) + "-" +
+      values.regreso.toLocaleDateString("es-CL", { day: '2-digit' }) : '';
+
     dispatch(searchFlights(values, token));
     console.log('searchResults', searchResults);
     // pasar los parametros de busqueda para mostrarlos en las ofertas de vuelo y en detalle de itinerario
-    // utilizarlos al momento de volver
+    // utilizarlos al momento de volver ?
     console.error('pasar los parametros de busqueda a las otras paginas');
     navigate('/flight-offers', {
       state: {
-        origen: values.origen,
-        destino: values.destino,
-        ida: values.ida,
-        regreso: values.regreso,
+        origen: origen.label,
+        destino: destino.label,
+        ida: ida,
+        regreso: regreso,
         adultos: values.adultos,
         boys: values.boys
       }
@@ -55,13 +79,13 @@ const Index = () => {
       setToken(response?.data?.access_token);
     } catch (error) {
       setError(error);
-    } 
+    }
   }
 
   useEffect(() => {
     getTokenAmadeus();
-  },[]);
-  
+  }, []);
+
   return (
     <div className='bg-white px-4 py-5 sm:px-6'>
       <Formik initialValues={{
@@ -188,7 +212,7 @@ const Index = () => {
 
             <div className="pt-5">
               <div className="flex justify-end">
-              
+
                 <button
                   type="reset"
                   className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

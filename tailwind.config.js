@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      rotate: {
+        '145': '145deg',
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

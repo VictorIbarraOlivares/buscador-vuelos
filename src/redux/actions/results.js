@@ -1,7 +1,7 @@
 import { apiCall } from "../../api";
 
 export const SEARCH_FLIGHTS_START = 'SEARCH_FLIGHTS_START';
-export const SEARCH_FLIGHTS_COMPLETE ='SEARCH_FLIGHTS_COMPLETE';
+export const SEARCH_FLIGHTS_COMPLETE = 'SEARCH_FLIGHTS_COMPLETE';
 export const SEARCH_FLIGHTS_ERROR = 'SEARCH_FLIGHTS_ERROR';
 
 export const searchFlightsStart = () => ({
@@ -21,9 +21,10 @@ const searchFlightsError = (error) => ({
 // Action Creator (redux thunk , ver como obtener el token desde el estado con getState ?)
 export const searchFlights = (searchParams, token) => async (dispatch) => {
   try {
+    console.log('searchPArams faltan los otros parametros', searchParams);
     dispatch(searchFlightsStart());
     const response = await apiCall(
-      `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=2022-11-01&adults=${searchParams.adultos}&max=12&currencyCode=EUR`,
+      `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=${searchParams.ida}&adults=${searchParams.adultos}&max=12&currencyCode=EUR`,
       // `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=2022-11-01&adults=${searchParams.adultos}&currencyCode=EUR`,
       token
     );
