@@ -55,10 +55,6 @@ const Index = () => {
       values.regreso.toLocaleDateString("es-CL", { day: '2-digit' }) : '';
 
     dispatch(searchFlights(values, token));
-    console.log('searchResults', searchResults);
-    // pasar los parametros de busqueda para mostrarlos en las ofertas de vuelo y en detalle de itinerario
-    // utilizarlos al momento de volver ?
-    console.error('pasar los parametros de busqueda a las otras paginas');
     navigate('/flight-offers', {
       state: {
         origen: origen.label,

@@ -37,15 +37,14 @@ export const { searchFlightsStart, searchFlightsError, searchFlightsComplete, se
 // Actions creators
 export const searchFlights = (searchParams, token) => async (dispatch) => {
   try {
-    console.log('searchPArams faltan los otros parametros', searchParams);
+    // console.log('searchPArams faltan los otros parametros', searchParams);
     dispatch(searchFlightsStart());
     const response = await apiCall(
-      `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=${searchParams.ida}&adults=${searchParams.adultos}&currencyCode=EUR`,
-      // `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=${searchParams.ida}&adults=${searchParams.adultos}&max=12&currencyCode=EUR`,
+      // `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=${searchParams.ida}&adults=${searchParams.adultos}&currencyCode=EUR`,
+      `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=${searchParams.ida}&adults=${searchParams.adultos}&max=3&currencyCode=EUR`,
       // `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=2022-11-01&adults=${searchParams.adultos}&currencyCode=EUR`,
       token
     );
-    console.log('Action Creator(resultsSlice) response', response);
     dispatch(searchFlightsComplete(response?.data?.data));
     dispatch(searchFlightsDictionariesComplete(response?.data?.dictionaries));
   } catch (error) {

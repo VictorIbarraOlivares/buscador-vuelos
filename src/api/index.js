@@ -14,10 +14,8 @@ export async function getToken() {
       }),
       { headers: { "content-type": "application/x-www-form-urlencoded" },}
     )
-    console.log('getToken response', response);
     return response;
   } catch (error) {
-    console.error('getToken error', error);
     return error;
   }
 }
@@ -28,10 +26,9 @@ export async function apiCall(url, token) {
       `${BASE_URL}${url}`,
       { headers: { 'Authorization': `Bearer ${token}` }}
     );
-    console.log('searchFlights', response);
+    // console.log('searchFlights', response);
     return response;
   } catch (error) {
-    console.error('searchFlights error', error);
     return error;
   }
 }

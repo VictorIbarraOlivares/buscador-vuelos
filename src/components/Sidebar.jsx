@@ -17,26 +17,19 @@ export default function Sidebar({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { origen, destino, ida, regreso, adultos, boys } = { ...location.state };
-
-  console.log('location', location);
-
-
   const navigation = [
-    { name: `Origen`, value: origen, icon: PaperAirplaneIcon, classIcon: 'rotate-45', current: false },
-    { name: 'Destino', value: destino, icon: PaperAirplaneIcon, classIcon: 'rotate-145', current: false },
-    { name: 'Ida', value: ida, icon: CalendarIcon, classIcon: false, current: false },
-    { name: 'Regreso', value: regreso, icon: CalendarIcon, classIcon: false, current: false },
-    { name: 'Adultos', value: adultos, icon: UsersIcon, classIcon: false, current: false },
-    { name: 'Niños', value: boys, icon: UsersIcon, classIcon: false, current: false },
+    { name: `Origen`, value: origen, icon: PaperAirplaneIcon, classIcon: 'rotate-45' },
+    { name: 'Destino', value: destino, icon: PaperAirplaneIcon, classIcon: 'rotate-145' },
+    { name: 'Ida', value: ida, icon: CalendarIcon, classIcon: false },
+    { name: 'Regreso', value: regreso, icon: CalendarIcon, classIcon: false },
+    { name: 'Adultos', value: adultos, icon: UsersIcon, classIcon: false },
+    { name: 'Niños', value: boys, icon: UsersIcon, classIcon: false },
   ]
   const goIndexPage = () => {
-    console.log('goIndexPage');
-    console.log('limpiar el slide de result en useEffect del index');
     navigate('/');
   };
 
   const goFlightOffersPage = () => {
-    console.log('goFlightOffersPage');
     navigate('/flight-offers', {
       state: {
         origen: origen,
@@ -212,22 +205,27 @@ export default function Sidebar({ children }) {
           <main className="flex-1">
             <div className="py-6">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-                <button
-                  onClick={() => goIndexPage()}
-                  type="button"
-                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Volver a realizar una búsqueda
-                </button>
-                {location.pathname === '/flight-offers/detail' &&
+              {location.pathname === '/flight-offers/detail' &&
                   <button
                     onClick={() => goFlightOffersPage()}
                     type="button"
-                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 float-right"
+                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Volver a oferta de vuelos
+                    Volver
                   </button>
                 }
+
+                <button
+                  onClick={() => goIndexPage()}
+                  type="button"
+                  className={classNames(
+                    location.pathname === '/flight-offers/detail' ? 'float-right' : '',
+                    'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                  )}
+                >
+                  Volver {location.pathname === '/flight-offers/detail' &&  'a realizar búsqueda'}
+                </button>
+               
               </div>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
@@ -237,16 +235,6 @@ export default function Sidebar({ children }) {
                 </div>
                 {/* /End replace */}
               </div>
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-                <button
-                  onClick={() => goIndexPage()}
-                  type="button"
-                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Volver a realizar una búsqueda
-                </button>
-              </div>
-
             </div>
           </main>
         </div>

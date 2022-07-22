@@ -13,12 +13,8 @@ const FlightOffers = () => {
   const error = useSelector(resultsFlightsError);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { state } = useLocation();
   const { origen, destino, ida, regreso, adultos, boys } = state;
-  console.log('mostrando lo que viene por state', origen, destino, ida, regreso, adultos, boys);
-  console.log('flightOffers', flightOffers);
-  console.log('dictionaries', dictionaries);
 
   if (isLoading) {
     return (
@@ -41,7 +37,6 @@ const FlightOffers = () => {
     )
   }
   const detail = (flightOffer) => {
-    console.log('flightOffer llamado detail', flightOffer);
     // dispatch(getFlightDetail (flightOffer, token));
     dispatch(getFlightDetail(flightOffer));
     navigate('/flight-offers/detail', {
@@ -57,11 +52,11 @@ const FlightOffers = () => {
   }
   return (
     <Sidebar>
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul role="list" className="divide-y divide-gray-200">
+      <div className="overflow-hidden sm:rounded-md">
+        <ul role="list" className="space-y-3">
           {flightOffers.map((flightOffer) => (
-            <li key={flightOffer.id}>
-              <a onClick={() => detail(flightOffer)} className="block hover:bg-gray-50 cursor-pointer">
+            <li key={flightOffer.id} className="bg-white shadow overflow-hidden rounded-md px-4 py-2">
+              <a onClick={() => detail(flightOffer)} className="block cursor-pointer">
                 <div className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
                     <p className="flex items-center text-sm font-medium text-indigo-500 truncate">
