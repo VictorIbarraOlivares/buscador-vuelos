@@ -1,14 +1,15 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { CalendarIcon, UsersIcon } from '@heroicons/react/solid';
 import { useDispatch, useSelector } from "react-redux";
-import { isLoadingResults, resultsData, resultsError } from '../redux/selectors/results';
+import { isLoadingResultsFlights, resultsFlightsData, resultsFlightsError } from "../redux/slices/results";
+
 import { getFlightDetail } from "../redux/slices/detail";
 import Sidebar from "../components/Sidebar";
 
 const FlightOffers = () => {
-  const flightOffers = useSelector(resultsData);
-  const isLoading = useSelector(isLoadingResults);
-  const error = useSelector(resultsError);
+  const flightOffers = useSelector(resultsFlightsData);
+  const isLoading = useSelector(isLoadingResultsFlights);
+  const error = useSelector(resultsFlightsError);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -1,13 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-// Reducers
-import results from "./results";
-import detailReducer from "./detail,js";
-
-// Slices
 import detailFlight from "../slices/detail";
+import resultsFlights from "../slices/results";
 
 export default combineReducers({
-  results,
-  detailReducer,
-  detailFlight
+  detailFlight,
+  resultsFlights
 });

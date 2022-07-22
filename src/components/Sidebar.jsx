@@ -91,7 +91,7 @@ export default function Sidebar({ children, origen, destino, ida, regreso, adult
                     </div> */}
                     <nav className="mt-5 px-2 space-y-1">
                       {navigation.map((item) => (
-                        item.value !== "" ?
+                        item.value !== "" && item.value !== 0 ?
                           <div
                             key={item.name}
                             className="bg-indigo-700 text-white group flex items-center align-middle px-2 py-2 text-sm font-medium rounded-md"
@@ -150,7 +150,7 @@ export default function Sidebar({ children, origen, destino, ida, regreso, adult
               </div> */}
               <nav className="mt-5 flex-1 px-2 space-y-1">
                 {navigation.map((item) => (
-                  item.value !== "" ?
+                  item.value !== "" && item.value !== 0 ?
                     <div
                       key={item.name}
                       className="bg-indigo-700 text-white group flex items-center align-middle px-2 py-2 text-sm font-medium rounded-md"

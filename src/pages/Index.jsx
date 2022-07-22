@@ -6,10 +6,9 @@ import DateInput from '../components/DateInput';
 import { useState, useEffect } from 'react';
 import { getToken } from '../api';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchFlights } from '../redux/actions/results';
 import { useNavigate } from 'react-router-dom';
 
-import { isLoadingResults, resultsData, resultsError } from '../redux/selectors/results';
+import { searchFlights, isLoadingResultsFlights, resultsFlightsData, resultsFlightsError } from "../redux/slices/results";
 
 import { locationsData } from '../utils/locations';
 const locationsOptions = locationsData.map((location) => {
@@ -25,9 +24,9 @@ const newSearchSchema = Yup.object({
 });
 
 const Index = () => {
-  const searchResults = useSelector(resultsData);
-  const isLoading = useSelector(isLoadingResults);
-  const error = useSelector(resultsError);
+  const searchResults = useSelector(resultsFlightsData);
+  const isLoading = useSelector(isLoadingResultsFlights);
+  const error = useSelector(resultsFlightsError);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
