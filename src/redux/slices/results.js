@@ -14,6 +14,8 @@ const resultsSlice = createSlice({
   reducers: {
     searchFlightsStart(state) {
       state.isLoading = true;
+      state.data = [];
+      state.dictionaries = {};
     },
     searchFlightsError(state, action) {
       state.isLoading = false;

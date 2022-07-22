@@ -46,12 +46,17 @@ const FlightOffers = () => {
     dispatch(getFlightDetail(flightOffer));
     navigate('/flight-offers/detail', {
       state: {
-
+        origen: origen, 
+        destino: destino,
+        ida: ida, 
+        regreso: regreso, 
+        adultos: adultos, 
+        boys: boys
       }
     });
   }
   return (
-    <Sidebar {...state}>
+    <Sidebar>
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
         <ul role="list" className="divide-y divide-gray-200">
           {flightOffers.map((flightOffer) => (
@@ -61,7 +66,7 @@ const FlightOffers = () => {
                   <div className="flex items-center justify-between">
                     <p className="flex items-center text-sm font-medium text-indigo-500 truncate">
                       <PaperAirplaneIcon className="flex-shrink-0 mr-1.5 h-5 w-5 rotate-45  " aria-hidden="true" />
-                      <span className="text-indigo-700 font-semibold">Aerolínea: {dictionaries.carriers[flightOffer.validatingAirlineCodes]}</span>
+                      <span className="text-indigo-700 font-semibold">Aerolínea: <span className="capitalize">{dictionaries.carriers[flightOffer.validatingAirlineCodes].toLowerCase()}</span></span>
                     </p>
                     <div className="ml-2 flex-shrink-0 flex">
                       <p className="px-2 inline-flex text-s leading-5 font-semibold rounded-full bg-green-100 text-green-800">

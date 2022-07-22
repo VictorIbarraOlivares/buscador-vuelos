@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 import { getFlightDetail, isLoadingFlightDetail, flightDetailData, flightDetailError } from "../redux/slices/detail";
 
 const Detail = () => {
@@ -27,11 +29,13 @@ const Detail = () => {
   }
 
   return (
-    <div>
-      <h2>Mostrando el itinerario de :</h2>
-      { flightOffer.source } <br/>
-      { flightOffer.price.total } { flightOffer.price.currency }
-    </div>
+    <Sidebar>
+      <div>
+        <h2>Mostrando el itinerario de :</h2>
+        { flightOffer.source } <br/>
+        { flightOffer.price.total } { flightOffer.price.currency }
+      </div>
+    </Sidebar>
   )
 }
 

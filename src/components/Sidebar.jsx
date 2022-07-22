@@ -7,14 +7,19 @@ import {
   UsersIcon,
   XIcon,
 } from '@heroicons/react/outline'
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
-export default function Sidebar({ children, origen, destino, ida, regreso, adultos, boys }) {
+export default function Sidebar({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { origen, destino, ida, regreso, adultos, boys } = { ...location.state };
 
-  console.log('mostrando lo que viene por state en sidebar', origen, destino, ida, regreso, adultos, boys);
+  console.log('location', location);
+
 
   const navigation = [
     { name: `Origen`, value: origen, icon: PaperAirplaneIcon, classIcon: 'rotate-45', current: false },
@@ -24,6 +29,25 @@ export default function Sidebar({ children, origen, destino, ida, regreso, adult
     { name: 'Adultos', value: adultos, icon: UsersIcon, classIcon: false, current: false },
     { name: 'Niños', value: boys, icon: UsersIcon, classIcon: false, current: false },
   ]
+  const goIndexPage = () => {
+    console.log('goIndexPage');
+    console.log('limpiar el slide de result en useEffect del index');
+    navigate('/');
+  };
+
+  const goFlightOffersPage = () => {
+    console.log('goFlightOffersPage');
+    navigate('/flight-offers', {
+      state: {
+        origen: origen,
+        destino: destino,
+        ida: ida,
+        regreso: regreso,
+        adultos: adultos,
+        boys: boys
+      }
+    });
+  };
 
   return (
     <>
@@ -175,7 +199,7 @@ export default function Sidebar({ children, origen, destino, ida, regreso, adult
           </div>
         </div>
         <div className="md:pl-64 flex flex-col flex-1">
-          <div className="sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-100">
+          <div className="sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white">
             <button
               type="button"
               className="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -188,7 +212,22 @@ export default function Sidebar({ children, origen, destino, ida, regreso, adult
           <main className="flex-1">
             <div className="py-6">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-                <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+                <button
+                  onClick={() => goIndexPage()}
+                  type="button"
+                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Volver a realizar una búsqueda
+                </button>
+                {location.pathname === '/flight-offers/detail' &&
+                  <button
+                    onClick={() => goFlightOffersPage()}
+                    type="button"
+                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 float-right"
+                  >
+                    Volver a oferta de vuelos
+                  </button>
+                }
               </div>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
@@ -198,6 +237,16 @@ export default function Sidebar({ children, origen, destino, ida, regreso, adult
                 </div>
                 {/* /End replace */}
               </div>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <button
+                  onClick={() => goIndexPage()}
+                  type="button"
+                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Volver a realizar una búsqueda
+                </button>
+              </div>
+
             </div>
           </main>
         </div>
