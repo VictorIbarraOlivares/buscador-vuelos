@@ -1,13 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { CalendarIcon, UsersIcon } from '@heroicons/react/solid';
+import { CalendarIcon, UsersIcon, PaperAirplaneIcon } from '@heroicons/react/solid';
 import { useDispatch, useSelector } from "react-redux";
-import { isLoadingResultsFlights, resultsFlightsData, resultsFlightsError } from "../redux/slices/results";
+import { isLoadingResultsFlights, resultsFlightsData, resultsFlightsDictionaries, resultsFlightsError } from "../redux/slices/results";
 
 import { getFlightDetail } from "../redux/slices/detail";
 import Sidebar from "../components/Sidebar";
 
 const FlightOffers = () => {
   const flightOffers = useSelector(resultsFlightsData);
+  const dictionaries = useSelector(resultsFlightsDictionaries);
   const isLoading = useSelector(isLoadingResultsFlights);
   const error = useSelector(resultsFlightsError);
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const FlightOffers = () => {
   const { origen, destino, ida, regreso, adultos, boys } = state;
   console.log('mostrando lo que viene por state', origen, destino, ida, regreso, adultos, boys);
   console.log('flightOffers', flightOffers);
+  console.log('dictionaries', dictionaries);
 
   if (isLoading) {
     return (
@@ -25,7 +27,7 @@ const FlightOffers = () => {
       </div>
     )
   }
-  if (!error) {
+  if (Object.keys(error).length !== 0) {
     return (
       <span className="text-red-500 my-auto mr-4 font-medium">Ha ocurrido un error</span>
     )
@@ -57,7 +59,10 @@ const FlightOffers = () => {
               <a onClick={() => detail(flightOffer)} className="block hover:bg-gray-50 cursor-pointer">
                 <div className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-indigo-600 truncate">ID: {flightOffer.id}</p>
+                    <p className="flex items-center text-sm font-medium text-indigo-500 truncate">
+                      <PaperAirplaneIcon className="flex-shrink-0 mr-1.5 h-5 w-5 rotate-45  " aria-hidden="true" />
+                      <span className="text-indigo-700 font-semibold">Aerolínea: {dictionaries.carriers[flightOffer.validatingAirlineCodes]}</span>
+                    </p>
                     <div className="ml-2 flex-shrink-0 flex">
                       <p className="px-2 inline-flex text-s leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                         {flightOffer.price.total} {flightOffer.price.currency}
@@ -68,14 +73,17 @@ const FlightOffers = () => {
                     <div className="sm:flex">
                       <p className="flex items-center text-sm text-gray-500">
                         <UsersIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                        Asientos disponibles: {flightOffer.numberOfBookableSeats}
+                        <span className="text-gray-700 font-semibold">Asientos disponibles: {flightOffer.numberOfBookableSeats}</span>
                       </p>
 
                       <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                         <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                        <p>
-                          Ultimo dia para reservar: <time dateTime={flightOffer.lastTicketingDate}>{flightOffer.lastTicketingDate}</time>
-                        </p>
+                        <span className="text-gray-700 font-semibold">
+                          Último día para reservar: {new Date(flightOffer.lastTicketingDate).toLocaleDateString("es-CL", { day: 'numeric' }) + " " +
+                            new Date(flightOffer.lastTicketingDate).toLocaleDateString("es-CL", { month: 'long' }).toLowerCase()
+                              .replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " +
+                            new Date(flightOffer.lastTicketingDate).toLocaleDateString("es-CL", { year: 'numeric' })}
+                        </span>
                       </div>
                     </div>
                     <div className="mt-2 flex items-center text-sm sm:mt-0">

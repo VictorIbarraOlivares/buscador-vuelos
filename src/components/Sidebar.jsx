@@ -12,7 +12,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 export default function Sidebar({ children, origen, destino, ida, regreso, adultos, boys }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   console.log('mostrando lo que viene por state en sidebar', origen, destino, ida, regreso, adultos, boys);
 
