@@ -34,7 +34,7 @@ export const getFlightDetail = (flightOffer) => async (dispatch) => {
      * Se puede utilizar la API para validar el precio del vuelo, es necesario utilizar post y enviar la oferta
      */
     
-    console.log('flightOffer in Slice', flightOffer);
+    // console.log('flightOffer in Slice', flightOffer);
 
     dispatch( getFlightComplete(flightOffer) );
   } catch (error) {

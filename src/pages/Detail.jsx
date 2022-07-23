@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Sidebar from "../components/Sidebar";
 import {
   getFlightDetail,
@@ -7,7 +6,7 @@ import {
   flightDetailData,
   flightDetailError
 } from "../redux/slices/detail";
-import { PaperAirplaneIcon, CheckIcon, ThumbUpIcon, UserIcon } from '@heroicons/react/solid'
+import { PaperAirplaneIcon, UserIcon } from '@heroicons/react/solid'
 import { resultsFlightsDictionaries } from "../redux/slices/results";
 
 import { locationsData } from '../utils/locations';
@@ -27,12 +26,21 @@ const formatDate = (param) => {
 
 const formatTime = (param) => {
   const date = new Date(param);
-  return date.toLocaleTimeString("es-CL");
+  return date.toLocaleTimeString("es-CL", {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 const formatDuration = (param) => {
-  const duration = param.slice(2);
+  let duration = param.slice(2);
+  duration = duration.replace(/H/i, " h ");
+  duration = duration.replace(/M/i, " m");
   return duration;
+}
+
+const getTypeTraveler = (param) => {
+  return param === 'ADULT' ? 'Adulto' : 'Niño';
 }
 
 function classNames(...classes) {
@@ -44,7 +52,6 @@ const Detail = () => {
   const dictionaries = useSelector(resultsFlightsDictionaries);
   const isLoading = useSelector(isLoadingFlightDetail);
   const error = useSelector(flightDetailError);
-
   if (isLoading) {
     return (
       <div>
@@ -52,7 +59,7 @@ const Detail = () => {
       </div>
     )
   }
-  if (!error) {
+  if (Object.keys(error).length !== 0) {
     return (
       <span className="text-red-500 my-auto mr-4 font-medium">Ha ocurrido un error en itinerario</span>
     )
@@ -65,20 +72,20 @@ const Detail = () => {
 
           <main>
 
-            <div className="max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
+            <div className="max-w-3xl mx-auto grid grid-cols-1 gap-1 lg:gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
 
-              <section aria-labelledby="itinerarios-title" className="lg:col-start-1 lg:col-span-2">
-                <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
-                  <h2 id="itinerarios-title" className="text-lg font-medium text-gray-900">
-                    Itinerarios
-                  </h2>
-                  <div className="mt-2 flow-root">
-                    <ul role="list" className="-mb-8">
-                      {flightOffer.itineraries.map((item, itemIdx) => (
+              {flightOffer.itineraries.map((item, itemIdx) => (
+                <section aria-labelledby="itinerarios-title" className="lg:col-start-1 lg:col-span-2 lg:mb-3">
+                  <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                    <h2 id="itinerarios-title" className="text-lg font-medium text-gray-900">
+                      Viaje de {itemIdx == 0 ? 'ida' : 'regreso'} duración total {formatDuration(item.duration)}
+                    </h2>
+                    <div className="mt-2 flow-root">
+                      <ul role="list" className="-mb-8">
                         <li key={'item' + itemIdx}>
                           <ul role="list" className="-mb-8 ">
                             {item.segments.map((segment, segmentIdx) => (
-                              <li key={segmentIdx} className="py-4">
+                              <li key={'segment' + segmentIdx} className="py-4">
                                 <div className="relative pb-8">
                                   <span
                                     className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"
@@ -176,20 +183,45 @@ const Detail = () => {
                             ))}
                           </ul>
                         </li>
-                      ))}
-                    </ul>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </section>
+                </section>
 
-              <section aria-labelledby="total-title" className=" lg:col-span-1">
+              ))}
+              <section aria-labelledby="total-title" className=" lg:col-span-1 sm:mb-5">
                 <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
                   <h2 id="total-title" className="text-lg font-medium text-gray-900">
-                    Total {flightOffer.price.total} {flightOffer.price.currency}
+                    Total <span className="float-right">{flightOffer.price.total} {flightOffer.price.currency}</span>
                   </h2>
-                  <h3>
-                    Duracion {formatDuration(flightOffer.itineraries[0].duration)}
-                  </h3>
+                  <ul role="list" className="mt-2">
+                    {flightOffer.travelerPricings.map((travelerPricing, travelerPricingIdx) => (
+                      <li key={'travelerPricingIdx' + travelerPricingIdx} className="py-3">
+                        <div className="relative pb-3">
+                          {/* <span
+                              className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"
+                              aria-hidden="true"
+                            /> */}
+                          <div className="relative flex space-x-3">
+                            <div className="flex items-center justify-center ">
+                              <UserIcon className="w-5 h-5 text-indigo-500" aria-hidden="true" />
+                            </div>
+                            <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                              <div className="text-sm text-gray-500">
+                                <p >Tipo</p>
+                                <p className="font-semibold">{getTypeTraveler(travelerPricing.travelerType)}</p>
+                              </div>
+                              <div className="text-left text-sm whitespace-nowrap text-gray-500">
+                                <p >Precio</p>
+                                <p className="font-semibold">{travelerPricing.price.total} {travelerPricing.price.currency}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </section>
             </div>
