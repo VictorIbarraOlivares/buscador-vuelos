@@ -25,10 +25,21 @@ export default ({ onChange, options, value, className }) => {
   return (
     <div className={className}>
       <AsyncSelect
+        placeholder=''
+        noOptionsMessage={() => 'No hay resultado'}
+        loadingMessage={() => 'Buscando...'} 
         cacheOptions
         loadOptions={promiseOptions}
         isClearable
         onChange={value => onChange(value)}
+        styles={{
+          input: (base) => ({
+            ...base,
+            'input:focus': {
+              boxShadow: 'none',
+            },
+          }),
+        }}
       />
     </div>
   )

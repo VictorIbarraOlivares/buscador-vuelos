@@ -85,7 +85,7 @@ const Detail = () => {
                         <li key={'item' + itemIdx}>
                           <ul role="list" className="-mb-8 ">
                             {item.segments.map((segment, segmentIdx) => (
-                              <li key={'segment' + segmentIdx} className="py-4">
+                              <li key={'segment' + segmentIdx + 'item' + item} className="py-4">
                                 <div className="relative pb-8">
                                   <span
                                     className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"

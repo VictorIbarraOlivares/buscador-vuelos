@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { searchFlights, isLoadingResultsFlights, resultsFlightsData, resultsFlightsError } from "../redux/slices/results";
+import dayjs from 'dayjs';
 
 import { locationsData } from '../utils/locations';
 const locationsOptions = locationsData.map((location) => {
@@ -19,9 +20,24 @@ const locationsOptions = locationsData.map((location) => {
 const newSearchSchema = Yup.object({
   origen: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
   destino: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
-  ida: Yup.string().required('Requerido'),
-  regreso: Yup.string(),
+  ida: Yup.date().required('Requerido'),
+  regreso: Yup.date().min(
+    Yup.ref('ida'),
+    "La fecha de regreso debe ser posterior a la fecha de ida"
+  )
 });
+
+const formatDateToSidebar = (param) => {
+  const date = new Date(param);
+  return date.toLocaleDateString("es-CL", { day: 'numeric' }) + " " + date.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase().replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " + date.toLocaleDateString("es-CL", { year: 'numeric' });
+}
+
+const formatDateToAPI = (param) => {
+  const date = new Date(param);
+  return date.toLocaleDateString("es-CL", { year: 'numeric' }) + "-" +
+  date.toLocaleDateString("es-CL", { month: '2-digit' }) + "-" +
+  date.toLocaleDateString("es-CL", { day: '2-digit' });
+}
 
 const Index = () => {
   const searchResults = useSelector(resultsFlightsData);
@@ -37,22 +53,12 @@ const Index = () => {
     // para el layout
     const origen = locationsOptions.find(location => location.value === values.origen);
     const destino = locationsOptions.find(location => location.value === values.destino);
-    const ida = values.ida.toLocaleDateString("es-CL", { day: 'numeric' }) + " " +
-      values.ida.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase()
-        .replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " +
-      values.ida.toLocaleDateString("es-CL", { year: 'numeric' });
-    const regreso = values.regreso !== '' ? values.regreso.toLocaleDateString("es-CL", { day: 'numeric' }) + " " +
-      values.regreso.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase()
-        .replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " +
-      values.regreso.toLocaleDateString("es-CL", { year: 'numeric' }) : '';
+    const ida = formatDateToSidebar(values.ida);
+    const regreso = values.regreso !== '' ? formatDateToSidebar(values.regreso) : '';
 
     // para la api
-    values.ida = values.ida.toLocaleDateString("es-CL", { year: 'numeric' }) + "-" +
-      values.ida.toLocaleDateString("es-CL", { month: '2-digit' }) + "-" +
-      values.ida.toLocaleDateString("es-CL", { day: '2-digit' });
-    values.regreso = values.regreso !== '' ? values.regreso.toLocaleDateString("es-CL", { year: 'numeric' }) + "-" +
-      values.regreso.toLocaleDateString("es-CL", { month: '2-digit' }) + "-" +
-      values.regreso.toLocaleDateString("es-CL", { day: '2-digit' }) : '';
+    values.ida = formatDateToAPI(values.ida);
+    values.regreso = values.regreso !== '' ? formatDateToAPI(values.regreso) : '';
 
     dispatch(searchFlights(values, token));
     navigate('/flight-offers', {
@@ -105,7 +111,7 @@ const Index = () => {
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label htmlFor="origen" className="block text-sm font-medium text-gray-700">
-                      Origen (*)
+                      Origen *
                     </label>
                     <div className="mt-1">
                       <AsyncSelectLocation
@@ -118,7 +124,7 @@ const Index = () => {
 
                   <div className="sm:col-span-3">
                     <label htmlFor="destino" className="block text-sm font-medium text-gray-700">
-                      Destino (*)
+                      Destino *
                     </label>
                     <div className="mt-1">
                       <AsyncSelectLocation
@@ -131,12 +137,13 @@ const Index = () => {
 
                   <div className="sm:col-span-3">
                     <label htmlFor="ida" className="block text-sm font-medium text-gray-700">
-                      Ida (*)
+                      Ida *
                     </label>
                     <div className="mt-1">
                       <DateInput
                         onChange={value => formik.setFieldValue('ida', value ? value : '')}
                         placeholder='Seleccione fecha de ida'
+                        min={dayjs(new Date()).startOf('day').add(1, 'days').toDate()}
                       />
                       <ErrorMessage name="ida" render={msg => <ErrorInput msg={msg} />} />
                     </div>
@@ -149,14 +156,17 @@ const Index = () => {
                     <div className="mt-1">
                       <DateInput
                         onChange={value => formik.setFieldValue('regreso', value ? value : '')}
+                        min={dayjs(new Date()).startOf('day').add(2, 'days').toDate()}
+                        disabled={formik.values.ida === '' && true}
                         placeholder='Seleccione fecha de regreso'
                       />
+                      <ErrorMessage name="regreso" render={msg => <ErrorInput msg={msg} />} />
                     </div>
                   </div>
 
                   <div className="sm:col-span-3">
                     <label htmlFor="adultos" className="block text-sm font-medium text-gray-700">
-                      Adultos (*)
+                      Adultos *
                     </label>
                     <div className="mt-1">
                       <Field
