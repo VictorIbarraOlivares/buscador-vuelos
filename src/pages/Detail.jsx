@@ -10,6 +10,31 @@ import {
 import { PaperAirplaneIcon, CheckIcon, ThumbUpIcon, UserIcon } from '@heroicons/react/solid'
 import { resultsFlightsDictionaries } from "../redux/slices/results";
 
+import { locationsData } from '../utils/locations';
+const locationsOptions = locationsData.map((location) => {
+  return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
+})
+
+const getLocation = (locations, code) => {
+  const location = locations.find(location => location.value === code);
+  return location ? location.label : code;
+}
+
+const formatDate = (param) => {
+  const date = new Date(param);
+  return date.toLocaleDateString("es-CL", { day: 'numeric' }) + " " + date.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase().replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " + date.toLocaleDateString("es-CL", { year: 'numeric' });
+}
+
+const formatTime = (param) => {
+  const date = new Date(param);
+  return date.toLocaleTimeString("es-CL");
+}
+
+const formatDuration = (param) => {
+  const duration = param.slice(2);
+  return duration;
+}
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -19,54 +44,6 @@ const Detail = () => {
   const dictionaries = useSelector(resultsFlightsDictionaries);
   const isLoading = useSelector(isLoadingFlightDetail);
   const error = useSelector(flightDetailError);
-
-  const eventTypes = {
-    applied: { icon: UserIcon, bgColorClass: 'bg-gray-400' },
-    advanced: { icon: ThumbUpIcon, bgColorClass: 'bg-blue-500' },
-    completed: { icon: CheckIcon, bgColorClass: 'bg-green-500' },
-  }
-  const timeline = [
-    {
-      id: 1,
-      type: eventTypes.applied,
-      content: 'Applied to',
-      target: 'Front End Developer',
-      date: 'Sep 20',
-      datetime: '2020-09-20',
-    },
-    {
-      id: 2,
-      type: eventTypes.advanced,
-      content: 'Advanced to phone screening by',
-      target: 'Bethany Blake',
-      date: 'Sep 22',
-      datetime: '2020-09-22',
-    },
-    {
-      id: 3,
-      type: eventTypes.completed,
-      content: 'Completed phone screening with',
-      target: 'Martha Gardner',
-      date: 'Sep 28',
-      datetime: '2020-09-28',
-    },
-    {
-      id: 4,
-      type: eventTypes.advanced,
-      content: 'Advanced to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 5,
-      type: eventTypes.completed,
-      content: 'Completed interview with',
-      target: 'Katherine Snyder',
-      date: 'Oct 4',
-      datetime: '2020-10-04',
-    },
-  ]
 
   if (isLoading) {
     return (
@@ -104,7 +81,7 @@ const Detail = () => {
                               <li key={segmentIdx} className="py-4">
                                 <div className="relative pb-8">
                                   <span
-                                    className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                                    className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"
                                     aria-hidden="true"
                                   />
                                   {/* {segmentIdx !== item.segments.length - 1 ? (
@@ -120,13 +97,13 @@ const Detail = () => {
                                       </span>
                                     </div>
                                     <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                                      <div>
-                                        <p className="text-sm text-gray-500">
-                                          Partida {segment.departure.iataCode}
-                                        </p>
+                                      <div className="text-sm text-gray-500">
+                                        <p >Partida</p>
+                                        <p className="font-semibold">{getLocation(locationsOptions, segment.departure.iataCode)}</p>
                                       </div>
-                                      <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                        <time dateTime={segment.departure.at}>{segment.departure.at}</time>
+                                      <div className="text-right text-sm whitespace-nowrap text-gray-500 font-semibold">
+                                        <time dateTime={segment.departure.at}>{formatDate(segment.departure.at)}</time>
+                                        <p >{formatTime(segment.departure.at)}</p>
                                       </div>
                                     </div>
                                   </div>
@@ -134,7 +111,7 @@ const Detail = () => {
 
                                 <div className="relative pb-8">
                                   <span
-                                    className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                                    className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"
                                     aria-hidden="true"
                                   />
                                   {/* {segmentIdx !== item.segments.length - 1 ? (
@@ -142,33 +119,37 @@ const Detail = () => {
                                   ) : null} */}
                                   <div className="relative flex space-x-3 ml-10">
                                     <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                                      <div>
-                                        <p className="text-sm text-gray-500">
-                                          Nun vuelo {segment.number}
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                          duracion {segment.duration}
-                                        </p>
+                                      <div className="whitespace-nowrap text-gray-500">
+                                        <div className="text-sm text-left text-gray-500">
+                                          <p >Vuelo</p>
+                                          <p className="font-semibold">{segment.number}</p>
+                                        </div>
+                                        <div className="text-sm text-left text-gray- mt-1">
+                                          <p >Duración</p>
+                                          <p className="font-semibold">{formatDuration(segment.duration)}</p>
+                                        </div>
                                       </div>
-                                      <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                        <p className="text-sm text-gray-500">
-                                          Aerolínea {segment.carrierCode}
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                          Avión  {segment.aircraft.code}
-                                        </p>
+
+                                      <div className="whitespace-nowrap text-gray-500">
+                                        <div className="text-sm text-left text-gray-500">
+                                          <p>Aerolínea</p>
+                                          <p className="font-semibold">{dictionaries.carriers[segment.carrierCode]}</p>
+                                        </div>
+                                        <div className="text-sm text-gray-500 mt-1">
+                                          <p>Avión</p>
+                                          <p className="font-semibold">{dictionaries.aircraft[segment.aircraft.code]}</p>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
 
                                 <div className="relative pb-8">
-                                  
                                   {segmentIdx !== item.segments.length - 1 ? (
                                     <span
-                                    className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                                    aria-hidden="true"
-                                  />
+                                      className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                                      aria-hidden="true"
+                                    />
                                   ) : null}
                                   <div className="relative flex space-x-3">
                                     <div>
@@ -180,13 +161,13 @@ const Detail = () => {
                                       </span>
                                     </div>
                                     <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                                      <div>
-                                        <p className="text-sm text-gray-500">
-                                          Llegada {segment.arrival.iataCode}
-                                        </p>
+                                      <div className="text-sm text-gray-500">
+                                        <p >Llegada</p>
+                                        <p className="font-semibold">{getLocation(locationsOptions, segment.arrival.iataCode)}</p>
                                       </div>
-                                      <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                        <time dateTime={segment.arrival.at}>{segment.arrival.at}</time>
+                                      <div className="text-right text-sm whitespace-nowrap text-gray-500 font-semibold">
+                                        <time dateTime={segment.arrival.at}>{formatDate(segment.arrival.at)}</time>
+                                        <p >{formatTime(segment.arrival.at)}</p>
                                       </div>
                                     </div>
                                   </div>
@@ -203,11 +184,11 @@ const Detail = () => {
 
               <section aria-labelledby="total-title" className=" lg:col-span-1">
                 <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
-                <h2 id="total-title" className="text-lg font-medium text-gray-900">
+                  <h2 id="total-title" className="text-lg font-medium text-gray-900">
                     Total {flightOffer.price.total} {flightOffer.price.currency}
                   </h2>
                   <h3>
-                  Duracion {flightOffer.itineraries[0].duration}
+                    Duracion {formatDuration(flightOffer.itineraries[0].duration)}
                   </h3>
                 </div>
               </section>
