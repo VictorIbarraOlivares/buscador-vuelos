@@ -6,6 +6,19 @@ import { isLoadingResultsFlights, resultsFlightsData, resultsFlightsDictionaries
 import { getFlightDetail } from "../redux/slices/detail";
 import Sidebar from "../components/Sidebar";
 
+const formatMoney = (currency, amount) => {
+  return new Intl.NumberFormat("es-CL",
+    {
+      style: 'currency',
+      currency: currency
+    }).format(amount);
+}
+
+const formatDate = (param) => {
+  const date = new Date(param);
+  return date.toLocaleDateString("es-CL", { day: 'numeric' }) + " " + date.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase().replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " + date.toLocaleDateString("es-CL", { year: 'numeric' });
+}
+
 const FlightOffers = () => {
   const flightOffers = useSelector(resultsFlightsData);
   const dictionaries = useSelector(resultsFlightsDictionaries);
@@ -41,11 +54,11 @@ const FlightOffers = () => {
     dispatch(getFlightDetail(flightOffer));
     navigate('/flight-offers/detail', {
       state: {
-        origen: origen, 
+        origen: origen,
         destino: destino,
-        ida: ida, 
-        regreso: regreso, 
-        adultos: adultos, 
+        ida: ida,
+        regreso: regreso,
+        adultos: adultos,
         boys: boys
       }
     });
@@ -65,7 +78,7 @@ const FlightOffers = () => {
                     </p>
                     <div className="ml-2 flex-shrink-0 flex">
                       <p className="px-2 inline-flex text-s leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        {flightOffer.price.total} {flightOffer.price.currency}
+                        {formatMoney(flightOffer.price.currency, flightOffer.price.total)}
                       </p>
                     </div>
                   </div>
@@ -79,10 +92,7 @@ const FlightOffers = () => {
                       <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                         <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
                         <span className="text-gray-700 font-semibold">
-                          Último día para reservar: {new Date(flightOffer.lastTicketingDate).toLocaleDateString("es-CL", { day: 'numeric' }) + " " +
-                            new Date(flightOffer.lastTicketingDate).toLocaleDateString("es-CL", { month: 'long' }).toLowerCase()
-                              .replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " +
-                            new Date(flightOffer.lastTicketingDate).toLocaleDateString("es-CL", { year: 'numeric' })}
+                          Último día para reservar: { formatDate(flightOffer.lastTicketingDate)}
                         </span>
                       </div>
                     </div>

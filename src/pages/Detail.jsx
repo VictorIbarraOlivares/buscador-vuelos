@@ -43,6 +43,14 @@ const getTypeTraveler = (param) => {
   return param === 'ADULT' ? 'Adulto' : 'Niño';
 }
 
+const formatMoney = (currency, amount) => {
+  return new Intl.NumberFormat("es-CL",
+    {
+      style: 'currency',
+      currency: currency
+    }).format(amount);
+}
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -192,7 +200,7 @@ const Detail = () => {
               <section aria-labelledby="total-title" className=" lg:col-span-1 sm:mb-5">
                 <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
                   <h2 id="total-title" className="text-lg font-medium text-gray-900">
-                    Total <span className="float-right">{flightOffer.price.total} {flightOffer.price.currency}</span>
+                    Total <span className="float-right"> {formatMoney(flightOffer.price.currency, flightOffer.price.total)}</span>
                   </h2>
                   <ul role="list" className="mt-2">
                     {flightOffer.travelerPricings.map((travelerPricing, travelerPricingIdx) => (
@@ -213,7 +221,7 @@ const Detail = () => {
                               </div>
                               <div className="text-left text-sm whitespace-nowrap text-gray-500">
                                 <p >Precio</p>
-                                <p className="font-semibold">{travelerPricing.price.total} {travelerPricing.price.currency}</p>
+                                <p className="font-semibold">{formatMoney(travelerPricing.price.currency, travelerPricing.price.total)}</p>
                               </div>
                             </div>
                           </div>
