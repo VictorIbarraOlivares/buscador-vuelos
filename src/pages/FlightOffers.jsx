@@ -29,6 +29,10 @@ const FlightOffers = () => {
   const { state } = useLocation();
   const { origen, destino, ida, regreso, adultos, boys } = state;
 
+  const getCarrier = (code) => {
+    return dictionaries.carriers[code] ? dictionaries.carriers[code].toLowerCase() : code;
+  }
+
   if (isLoading) {
     return (
       <div>
@@ -63,6 +67,7 @@ const FlightOffers = () => {
       }
     });
   }
+
   return (
     <Sidebar>
       <div className="overflow-hidden sm:rounded-md">
@@ -74,7 +79,9 @@ const FlightOffers = () => {
                   <div className="flex items-center justify-between">
                     <p className="flex items-center text-sm font-medium text-indigo-500 truncate">
                       <PaperAirplaneIcon className="flex-shrink-0 mr-1.5 h-5 w-5 rotate-45  " aria-hidden="true" />
-                      <span className="text-indigo-700 font-semibold">Aerolínea: <span className="capitalize">{dictionaries.carriers[flightOffer.validatingAirlineCodes].toLowerCase()}</span></span>
+                      <span className="text-indigo-700 font-semibold">Aerolínea
+                      <span className="capitalize"> {getCarrier(flightOffer.validatingAirlineCodes)}</span>
+                      </span>
                     </p>
                     <div className="ml-2 flex-shrink-0 flex">
                       <p className="px-2 inline-flex text-s leading-5 font-semibold rounded-full bg-green-100 text-green-800">

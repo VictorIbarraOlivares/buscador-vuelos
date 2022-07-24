@@ -60,6 +60,11 @@ const Detail = () => {
   const dictionaries = useSelector(resultsFlightsDictionaries);
   const isLoading = useSelector(isLoadingFlightDetail);
   const error = useSelector(flightDetailError);
+  
+  const getCarrier = (code) => {
+    return dictionaries.carriers[code] ? dictionaries.carriers[code].toLowerCase() : code;
+  }
+
   if (isLoading) {
     return (
       <div>
@@ -148,7 +153,7 @@ const Detail = () => {
                                       <div className="whitespace-nowrap text-gray-500">
                                         <div className="text-sm text-left text-gray-500">
                                           <p>Aerolínea</p>
-                                          <p className="font-semibold">{dictionaries.carriers[segment.carrierCode]}</p>
+                                          <p className="font-semibold">{getCarrier(segment.carrierCode)}</p>
                                         </div>
                                         <div className="text-sm text-gray-500 mt-1">
                                           <p>Avión</p>
