@@ -21,7 +21,7 @@ const newSearchSchema = Yup.object({
   ),
   adultos: Yup.number().max(8),
   boys: Yup.number().when("adultos", adultos => {
-    return Yup.number().max(9 - adultos, "los pasajeros no pueden ser mas de 9");
+    return Yup.number().max(9 - adultos, "los pasajeros no pueden ser más de 9");
   })
 });
 
