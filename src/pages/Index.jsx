@@ -74,8 +74,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className='h-full md:h-screen bg-indigo-100 p-1 md:p-10 flex items-center justify-center'>
-
+    <div className='h-screen md:h-screen bg-indigo-100 p-1 md:p-10 flex items-center justify-center'>
     
     <div className=' bg-white px-4 py-5 sm:px-6 m-4 sm:m-4 rounded-lg shadow-lg shadow-indigo-600'>
       <Formik initialValues={{
