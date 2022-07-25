@@ -12,5 +12,7 @@ VITE_CLIENT_ID
 VITE_CLIENT_SECRET
 
 En la consola:
+
 1- npm install
+
 2- npm run dev
