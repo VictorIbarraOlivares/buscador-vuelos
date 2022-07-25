@@ -74,7 +74,10 @@ const Index = () => {
   }, []);
 
   return (
-    <div className='min-h-full bg-white px-4 py-5 sm:px-6 m-4 sm:m-4 rounded-lg'>
+    <div className='h-full bg-gray-100 p-10'>
+
+    
+    <div className=' bg-white px-4 py-5 sm:px-6 m-4 sm:m-4 rounded-lg'>
       <Formik initialValues={{
         origen: '',
         destino: '',
@@ -217,6 +220,7 @@ const Index = () => {
           </Form>
         )}
       </Formik>
+    </div>
     </div>
   )
 }
