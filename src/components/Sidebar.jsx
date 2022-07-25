@@ -8,10 +8,8 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { useNavigate, useLocation } from 'react-router-dom';
+import { classNames } from '../utils/helpers';
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 export default function Sidebar({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
@@ -25,6 +23,7 @@ export default function Sidebar({ children }) {
     { name: 'Adultos', value: adultos, icon: UsersIcon, classIcon: false },
     { name: 'Niños', value: boys, icon: UsersIcon, classIcon: false },
   ]
+
   const goIndexPage = () => {
     navigate('/');
   };
@@ -44,14 +43,6 @@ export default function Sidebar({ children }) {
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-40 md:hidden" onClose={setSidebarOpen}>
@@ -230,7 +221,6 @@ export default function Sidebar({ children }) {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
                 <div className="py-4">
-                  {/* <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" /> */}
                   {children}
                 </div>
                 {/* /End replace */}

@@ -8,33 +8,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { searchFlights, isLoadingResultsFlights } from "../redux/slices/results";
 import dayjs from 'dayjs';
-import { locationsData } from '../utils/locations';
-
-const locationsOptions = locationsData.map((location) => {
-  return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
-});
+import { locationsOptions, formatDate, formatDateToAPI } from '../utils/helpers';
 
 const newSearchSchema = Yup.object({
   origen: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
-  destino: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
+  destino: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido')
+  .notOneOf([Yup.ref('origen')], "El destino debe ser distinto al origen"),
   ida: Yup.date().required('Requerido'),
   regreso: Yup.date().min(
     Yup.ref('ida'),
     "La fecha de regreso debe ser posterior a la fecha de ida"
-  )
+  ),
+  adultos: Yup.number().max(8),
+  boys: Yup.number().when("adultos", adultos => {
+    return Yup.number().max(9 - adultos, "los pasajeros no pueden ser mas de 9");
+  })
 });
-
-const formatDateToSidebar = (param) => {
-  const date = new Date(param);
-  return date.toLocaleDateString("es-CL", { day: 'numeric' }) + " " + date.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase().replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " + date.toLocaleDateString("es-CL", { year: 'numeric' });
-}
-
-const formatDateToAPI = (param) => {
-  const date = new Date(param);
-  return date.toLocaleDateString("es-CL", { year: 'numeric' }) + "-" +
-  date.toLocaleDateString("es-CL", { month: '2-digit' }) + "-" +
-  date.toLocaleDateString("es-CL", { day: '2-digit' });
-}
 
 const Index = () => {
   const isLoading = useSelector(isLoadingResultsFlights);
@@ -48,8 +37,8 @@ const Index = () => {
     // para el layout
     const origen = locationsOptions.find(location => location.value === values.origen);
     const destino = locationsOptions.find(location => location.value === values.destino);
-    const ida = formatDateToSidebar(values.ida);
-    const regreso = values.regreso !== '' ? formatDateToSidebar(values.regreso) : '';
+    const ida = formatDate(values.ida);
+    const regreso = values.regreso !== '' ? formatDate(values.regreso) : '';
 
     // para la api
     values.ida = formatDateToAPI(values.ida);
@@ -78,11 +67,14 @@ const Index = () => {
   }
 
   useEffect(() => {
-    getTokenAmadeus();
+    const getTokenHelp = () => {
+      getTokenAmadeus();
+    }
+    getTokenHelp();
   }, []);
 
   return (
-    <div className='bg-white px-4 py-5 sm:px-6'>
+    <div className='min-h-full bg-white px-4 py-5 sm:px-6 m-4 sm:m-4 rounded-lg'>
       <Formik initialValues={{
         origen: '',
         destino: '',
@@ -97,7 +89,7 @@ const Index = () => {
         {(formik) => (
           <Form className="space-y-8 divide-y divide-gray-200">
             <div className="space-y-8 divide-y divide-gray-200">
-              <div className="pt-8">
+              <div className="pt-2">
                 <div>
                   <h3 className="text-lg leading-6 font-medium text-gray-900">Busqueda de vuelos</h3>
                   <p className="mt-1 text-sm text-gray-500">Complete los campos necesarios para realizar la busqueda</p>
@@ -179,6 +171,7 @@ const Index = () => {
                         <option value="8">8</option>
                       </Field>
                     </div>
+                    <ErrorMessage name="adultos" render={msg => <ErrorInput msg={msg} />} />
                   </div>
 
                   <div className="sm:col-span-3">
@@ -202,6 +195,7 @@ const Index = () => {
                         <option value="7">7</option>
                         <option value="8">8</option>
                       </Field>
+                      <ErrorMessage name="boys" render={msg => <ErrorInput msg={msg} />} />
                     </div>
                   </div>
                 </div>
@@ -211,14 +205,6 @@ const Index = () => {
 
             <div className="pt-5">
               <div className="flex justify-end">
-
-                <button
-                  type="reset"
-                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Borrar
-                </button>
-
                 <button
                   type="submit"
                   disabled={isLoading}

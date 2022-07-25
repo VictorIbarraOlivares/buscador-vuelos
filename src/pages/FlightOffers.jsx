@@ -1,5 +1,4 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { CalendarIcon, UsersIcon, PaperAirplaneIcon } from '@heroicons/react/solid';
 import { useDispatch, useSelector } from "react-redux";
 import { isLoadingResultsFlights, resultsFlightsData, resultsFlightsDictionaries, resultsFlightsError } from "../redux/slices/results";
 import FlightOfferItem from '../components/FlightOfferItem';
@@ -41,7 +40,6 @@ const FlightOffers = () => {
     <Sidebar>
       <div className="overflow-hidden sm:rounded-md">
         <ul role="list" className="space-y-3">
-          {isLoading && <FlightOfferLoading />}
           {!isLoading && (flightOffers?.length === 0 || Object.keys(error).length !== 0) &&
             <li className="bg-white shadow overflow-hidden rounded-md px-4 py-2">
               <a onClick={() => navigate('/')} className="block cursor-pointer">
@@ -62,6 +60,7 @@ const FlightOffers = () => {
               </a>
             </li>
           }
+          {isLoading && <FlightOfferLoading />}
           {!isLoading && flightOffers?.map((flightOffer) => <FlightOfferItem key={flightOffer.id} flightOffer={flightOffer} onClick={detail} getCarrier={getCarrier} />)}
         </ul>
       </div>

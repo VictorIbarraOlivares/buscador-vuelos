@@ -54,7 +54,7 @@ export const searchFlights = (searchParams, token) => async (dispatch) => {
     dispatch(searchFlightsDictionariesComplete(response?.data?.dictionaries));
   } catch (error) {
     console.error('error', error);
-    dispatch(searchFlightsError(error.message));
+    dispatch(searchFlightsError({error: 'error en la consula'}));
   }
 };
 

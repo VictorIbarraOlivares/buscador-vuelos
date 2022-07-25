@@ -8,52 +8,15 @@ import {
 } from "../redux/slices/detail";
 import { PaperAirplaneIcon, UserIcon } from '@heroicons/react/solid'
 import { resultsFlightsDictionaries } from "../redux/slices/results";
-
-import { locationsData } from '../utils/locations';
-const locationsOptions = locationsData.map((location) => {
-  return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
-})
-
-const getLocation = (locations, code) => {
-  const location = locations.find(location => location.value === code);
-  return location ? location.label : code;
-}
-
-const formatDate = (param) => {
-  const date = new Date(param);
-  return date.toLocaleDateString("es-CL", { day: 'numeric' }) + " " + date.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase().replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " + date.toLocaleDateString("es-CL", { year: 'numeric' });
-}
-
-const formatTime = (param) => {
-  const date = new Date(param);
-  return date.toLocaleTimeString("es-CL", {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-}
-
-const formatDuration = (param) => {
-  let duration = param.slice(2);
-  duration = duration.replace(/H/i, " h ");
-  duration = duration.replace(/M/i, " m");
-  return duration;
-}
-
-const getTypeTraveler = (param) => {
-  return param === 'ADULT' ? 'Adulto' : 'Niño';
-}
-
-const formatMoney = (currency, amount) => {
-  return new Intl.NumberFormat("es-CL",
-    {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
-}
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+import { 
+  locationsOptions, 
+  formatDate,
+  getLocation,
+  formatTime,
+  formatDuration,
+  getTypeTraveler,
+  formatMoney
+ } from "../utils/helpers";
 
 const Detail = () => {
   const flightOffer = useSelector(flightDetailData);
@@ -82,11 +45,8 @@ const Detail = () => {
     <Sidebar>
       <>
         <div className="min-h-full">
-
           <main>
-
             <div className="max-w-3xl mx-auto grid grid-cols-1 gap-1 lg:gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
-
               {flightOffer.itineraries.map((item, itemIdx) => (
                 <section key={'item' + itemIdx} aria-labelledby="itinerarios-title" className="lg:col-start-1 lg:col-span-2 lg:mb-3">
                   <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
@@ -210,10 +170,6 @@ const Detail = () => {
                     {flightOffer.travelerPricings.map((travelerPricing, travelerPricingIdx) => (
                       <li key={'travelerPricing' + travelerPricingIdx} className="py-3">
                         <div className="relative pb-3">
-                          {/* <span
-                              className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"
-                              aria-hidden="true"
-                            /> */}
                           <div className="relative flex space-x-3">
                             <div className="flex items-center justify-center ">
                               <UserIcon className="w-5 h-5 text-indigo-500" aria-hidden="true" />

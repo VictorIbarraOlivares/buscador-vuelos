@@ -1,10 +1,6 @@
 import { memo } from 'react';
 import AsyncSelect from 'react-select/async';
-import { locationsData } from '../utils/locations';
-
-const locationsOptions = locationsData.map((location) => {
-  return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
-})
+import { locationsOptions } from '../utils/helpers';
 
 const filterLocations = (inputValue) => {
   if (inputValue.length >= 3) {
