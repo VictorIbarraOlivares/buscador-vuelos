@@ -153,7 +153,7 @@ const Detail = () => {
                                       <div className="whitespace-nowrap text-gray-500">
                                         <div className="text-sm text-left text-gray-500">
                                           <p>Aerolínea</p>
-                                          <p className="font-semibold">{getCarrier(segment.carrierCode)}</p>
+                                          <p className="font-semibold capitalize">{getCarrier(segment.carrierCode)}</p>
                                         </div>
                                         <div className="text-sm text-gray-500 mt-1">
                                           <p>Avión</p>

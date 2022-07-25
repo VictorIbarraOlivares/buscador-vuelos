@@ -45,7 +45,7 @@ export const searchFlights = (searchParams, token) => async (dispatch) => {
     if (searchParams.boys !== 0) {
       urlOptionalParams = `${urlOptionalParams}&children=${searchParams.boys}`;
     }
-    const url = `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=${searchParams.ida}&adults=${searchParams.adultos}${urlOptionalParams}&max=30&currencyCode=USD`;
+    const url = `v2/shopping/flight-offers?originLocationCode=${searchParams.origen}&destinationLocationCode=${searchParams.destino}&departureDate=${searchParams.ida}&adults=${searchParams.adultos}${urlOptionalParams}&currencyCode=USD`;
     const response = await apiCall(
       url,
       token
@@ -53,8 +53,8 @@ export const searchFlights = (searchParams, token) => async (dispatch) => {
     dispatch(searchFlightsComplete(response?.data?.data));
     dispatch(searchFlightsDictionariesComplete(response?.data?.dictionaries));
   } catch (error) {
-    console.error('error', error)
-    dispatch(searchFlightsError(error));
+    console.error('error', error);
+    dispatch(searchFlightsError(error.message));
   }
 };
 

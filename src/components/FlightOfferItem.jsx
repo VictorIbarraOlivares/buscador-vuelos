@@ -1,21 +1,12 @@
 import { memo } from "react";
 import { PaperAirplaneIcon, CalendarIcon, UsersIcon } from "@heroicons/react/solid";
-const formatMoney = (currency, amount) => {
-  return new Intl.NumberFormat("es-CL",
-    {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
-}
+import { formatMoney, formatDate } from "../utils/helpers";
 
-const formatDate = (param) => {
-  const date = new Date(param);
-  return date.toLocaleDateString("es-CL", { day: 'numeric' }) + " " + date.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase().replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " + date.toLocaleDateString("es-CL", { year: 'numeric' });
-}
+
 const FlightOfferItem = ({ flightOffer, onClick, getCarrier }) => {
   return (
     <>
-      <li className="bg-white shadow overflow-hidden rounded-md px-4 py-2">
+      <li className="bg-white hover:bg-indigo-100 hover:opacity-90 shadow overflow-hidden rounded-md px-4 py-2">
         <a onClick={() => onClick(flightOffer)} className="block cursor-pointer">
           <div className="px-4 py-4 sm:px-6">
             <div className="flex items-center justify-between">

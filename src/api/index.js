@@ -26,7 +26,6 @@ export async function apiCall(url, token) {
       `${BASE_URL}${url}`,
       { headers: { 'Authorization': `Bearer ${token}` }}
     );
-    // console.log('searchFlights', response);
     return response;
   } catch (error) {
     return error;

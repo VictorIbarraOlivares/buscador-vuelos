@@ -65,8 +65,7 @@ const Index = () => {
         adultos: values.adultos,
         boys: values.boys
       }
-    }
-    );
+    });
   }
 
   const getTokenAmadeus = async () => {
@@ -77,8 +76,6 @@ const Index = () => {
       setError(error);
     }
   }
-
-  // console.log(handleSubmit, getTokenAmadeus);
 
   useEffect(() => {
     getTokenAmadeus();
