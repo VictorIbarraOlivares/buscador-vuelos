@@ -6,7 +6,7 @@ import { formatMoney, formatDate } from "../utils/helpers";
 const FlightOfferItem = ({ flightOffer, onClick, getCarrier }) => {
   return (
     <>
-      <li className="bg-white hover:bg-indigo-100 hover:opacity-90 shadow overflow-hidden rounded-md px-4 py-2">
+      <li className="bg-white hover:bg-gray-100 hover:opacity-90 shadow-md shadow-indigo-600 overflow-hidden rounded-md px-4 py-2">
         <a onClick={() => onClick(flightOffer)} className="block cursor-pointer">
           <div className="px-4 py-4 sm:px-6">
             <div className="flex items-center justify-between">

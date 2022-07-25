@@ -46,10 +46,10 @@ const Detail = () => {
       <>
         <div className="min-h-full">
           <main>
-            <div className="max-w-3xl mx-auto grid grid-cols-1 gap-1 lg:gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
+            <div className="max-w-3xl mx-auto grid grid-rows-1 gap-1 grid-flow-row lg:gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
               {flightOffer.itineraries.map((item, itemIdx) => (
                 <section key={'item' + itemIdx} aria-labelledby="itinerarios-title" className="lg:col-start-1 lg:col-span-2 lg:mb-3">
-                  <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                  <div className="bg-white px-4 py-5 shadow shadow-indigo-400 sm:rounded-lg sm:px-6">
                     <h2 id="itinerarios-title" className="text-lg font-medium text-gray-900">
                       Viaje de {itemIdx == 0 ? 'ida' : 'regreso'} duración total {formatDuration(item.duration)}
                     </h2>
@@ -161,8 +161,8 @@ const Detail = () => {
                   </div>
                 </section>
               ))}
-              <section aria-labelledby="total-title" className=" lg:col-span-1 sm:mb-5">
-                <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
+              <section aria-labelledby="total-title" className=" lg:col-span-1 sm:mb-5 order-first">
+                <div className="bg-white px-4 py-5 shadow shadow-indigo-400 sm:rounded-lg sm:px-6">
                   <h2 id="total-title" className="text-lg font-medium text-gray-900">
                     Total <span className="float-right"> {formatMoney(flightOffer.price.currency, flightOffer.price.total)}</span>
                   </h2>

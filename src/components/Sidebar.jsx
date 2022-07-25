@@ -193,14 +193,14 @@ export default function Sidebar({ children }) {
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="flex-1 bg-gray-100">
+          <main className="flex-1 bg-indigo-100">
             <div className="py-6">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {location.pathname === '/flight-offers/detail' &&
                   <button
                     onClick={() => goFlightOffersPage()}
                     type="button"
-                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Volver
                   </button>
@@ -211,10 +211,10 @@ export default function Sidebar({ children }) {
                   type="button"
                   className={classNames(
                     location.pathname === '/flight-offers/detail' ? 'ml-4' : '',
-                    'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                    'ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                   )}
                 >
-                  Volver {location.pathname === '/flight-offers/detail' &&  'a realizar búsqueda'}
+                  {location.pathname === '/flight-offers/detail' ? 'Realizar nueva búsqueda' : 'Volver'}
                 </button>
                
               </div>

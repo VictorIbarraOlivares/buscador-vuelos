@@ -74,10 +74,10 @@ const Index = () => {
   }, []);
 
   return (
-    <div className='h-full bg-gray-100 p-10'>
+    <div className='h-full md:h-screen bg-indigo-100 p-1 md:p-10 flex items-center justify-center'>
 
     
-    <div className=' bg-white px-4 py-5 sm:px-6 m-4 sm:m-4 rounded-lg'>
+    <div className=' bg-white px-4 py-5 sm:px-6 m-4 sm:m-4 rounded-lg shadow-lg shadow-indigo-600'>
       <Formik initialValues={{
         origen: '',
         destino: '',
@@ -90,15 +90,15 @@ const Index = () => {
         validationSchema={newSearchSchema}
       >
         {(formik) => (
-          <Form className="space-y-8 divide-y divide-gray-200">
-            <div className="space-y-8 divide-y divide-gray-200">
+          <Form className="content-center">
+            <div className="">
               <div className="pt-2">
                 <div>
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Busqueda de vuelos</h3>
-                  <p className="mt-1 text-sm text-gray-500">Complete los campos necesarios para realizar la busqueda</p>
+                  <h3 className="text-lg leading-6 font-medium text-indigo-700">Búsqueda de vuelos</h3>
+                  <p className="mt-1 text-sm text-gray-500">Encuentra el vuelo que necesitas</p>
                 </div>
-                <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                  <div className="sm:col-span-3">
+                <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-8">
+                  <div className="sm:col-span-4">
                     <label htmlFor="origen" className="block text-sm font-medium text-gray-700">
                       Origen *
                     </label>
@@ -111,7 +111,7 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <div className="sm:col-span-3">
+                  <div className="sm:col-span-4">
                     <label htmlFor="destino" className="block text-sm font-medium text-gray-700">
                       Destino *
                     </label>
@@ -124,21 +124,21 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <div className="sm:col-span-3">
+                  <div className="sm:col-span-2 z-0">
                     <label htmlFor="ida" className="block text-sm font-medium text-gray-700">
                       Ida *
                     </label>
                     <div className="mt-1">
                       <DateInput
                         onChange={value => formik.setFieldValue('ida', value ? value : '')}
-                        placeholder='Seleccione fecha de ida'
+                        placeholder='Seleccione fecha'
                         min={dayjs(new Date()).startOf('day').add(1, 'days').toDate()}
                       />
                       <ErrorMessage name="ida" render={msg => <ErrorInput msg={msg} />} />
                     </div>
                   </div>
 
-                  <div className="sm:col-span-3">
+                  <div className="sm:col-span-2 z-0">
                     <label htmlFor="regreso" className="block text-sm font-medium text-gray-700">
                       Regreso
                     </label>
@@ -147,13 +147,13 @@ const Index = () => {
                         onChange={value => formik.setFieldValue('regreso', value ? value : '')}
                         min={dayjs(new Date()).startOf('day').add(2, 'days').toDate()}
                         disabled={formik.values.ida === '' && true}
-                        placeholder='Seleccione fecha de regreso'
+                        placeholder='Seleccione fecha'
                       />
                       <ErrorMessage name="regreso" render={msg => <ErrorInput msg={msg} />} />
                     </div>
                   </div>
 
-                  <div className="sm:col-span-3">
+                  <div className="sm:col-span-2">
                     <label htmlFor="adultos" className="block text-sm font-medium text-gray-700">
                       Adultos *
                     </label>
@@ -177,7 +177,7 @@ const Index = () => {
                     <ErrorMessage name="adultos" render={msg => <ErrorInput msg={msg} />} />
                   </div>
 
-                  <div className="sm:col-span-3">
+                  <div className="sm:col-span-2">
                     <label htmlFor="boys" className="block text-sm font-medium text-gray-700">
                       Niños
                     </label>
