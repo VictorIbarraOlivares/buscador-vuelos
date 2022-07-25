@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import { DatePicker } from '@mantine/dates';
 import 'dayjs/locale/es';
 import { CalendarIcon } from '@heroicons/react/outline'
 
-export default ({ onChange, className, label, placeholder, min, disabled }) => {
+const DateInput = ({ onChange, className, label, placeholder, min, disabled }) => {
   return (
     <div className={className}>
       <DatePicker
@@ -18,3 +19,5 @@ export default ({ onChange, className, label, placeholder, min, disabled }) => {
     </div>
   )
 }
+
+export default memo(DateInput);

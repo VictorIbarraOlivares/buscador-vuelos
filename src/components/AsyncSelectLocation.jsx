@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import AsyncSelect from 'react-select/async';
 import { locationsData } from '../utils/locations';
 
@@ -21,7 +22,7 @@ const promiseOptions = (inputValue) =>
     }, 1000);
   });
 
-export default ({ onChange, options, value, className }) => {
+const AsyncSelectLocation = ({ onChange, options, value, className }) => {
   return (
     <div className={className}>
       <AsyncSelect
@@ -44,3 +45,5 @@ export default ({ onChange, options, value, className }) => {
     </div>
   )
 }
+
+export default memo(AsyncSelectLocation);

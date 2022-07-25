@@ -60,7 +60,7 @@ const Detail = () => {
   const dictionaries = useSelector(resultsFlightsDictionaries);
   const isLoading = useSelector(isLoadingFlightDetail);
   const error = useSelector(flightDetailError);
-  
+
   const getCarrier = (code) => {
     return dictionaries.carriers[code] ? dictionaries.carriers[code].toLowerCase() : code;
   }
@@ -88,17 +88,17 @@ const Detail = () => {
             <div className="max-w-3xl mx-auto grid grid-cols-1 gap-1 lg:gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
 
               {flightOffer.itineraries.map((item, itemIdx) => (
-                <section aria-labelledby="itinerarios-title" className="lg:col-start-1 lg:col-span-2 lg:mb-3">
+                <section key={'item' + itemIdx} aria-labelledby="itinerarios-title" className="lg:col-start-1 lg:col-span-2 lg:mb-3">
                   <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
                     <h2 id="itinerarios-title" className="text-lg font-medium text-gray-900">
                       Viaje de {itemIdx == 0 ? 'ida' : 'regreso'} duración total {formatDuration(item.duration)}
                     </h2>
                     <div className="mt-2 flow-root">
                       <ul role="list" className="-mb-8">
-                        <li key={'item' + itemIdx}>
+                        <li>
                           <ul role="list" className="-mb-8 ">
                             {item.segments.map((segment, segmentIdx) => (
-                              <li key={'segment' + segmentIdx + 'item' + item} className="py-4">
+                              <li key={'segment' + segmentIdx + 'item' + itemIdx} className="py-4">
                                 <div className="relative pb-8">
                                   <span
                                     className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"
@@ -200,7 +200,6 @@ const Detail = () => {
                     </div>
                   </div>
                 </section>
-
               ))}
               <section aria-labelledby="total-title" className=" lg:col-span-1 sm:mb-5">
                 <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
@@ -209,7 +208,7 @@ const Detail = () => {
                   </h2>
                   <ul role="list" className="mt-2">
                     {flightOffer.travelerPricings.map((travelerPricing, travelerPricingIdx) => (
-                      <li key={'travelerPricingIdx' + travelerPricingIdx} className="py-3">
+                      <li key={'travelerPricing' + travelerPricingIdx} className="py-3">
                         <div className="relative pb-3">
                           {/* <span
                               className="absolute top-10 left-4 -ml-px h-full w-0.5 bg-indigo-300"

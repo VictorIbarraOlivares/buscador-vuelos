@@ -1,21 +1,18 @@
-import { Field, Form, Formik, ErrorMessage } from 'formik';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-
+import { Field, Form, Formik, ErrorMessage } from 'formik';
 import AsyncSelectLocation from '../components/AsyncSelectLocation';
 import DateInput from '../components/DateInput';
-import { useState, useEffect } from 'react';
 import { getToken } from '../api';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import { searchFlights, isLoadingResultsFlights, resultsFlightsData, resultsFlightsError } from "../redux/slices/results";
+import { searchFlights, isLoadingResultsFlights } from "../redux/slices/results";
 import dayjs from 'dayjs';
-
 import { locationsData } from '../utils/locations';
+
 const locationsOptions = locationsData.map((location) => {
   return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
-})
-
+});
 
 const newSearchSchema = Yup.object({
   origen: Yup.string().min(3, "Debe contener al menos 3 caracteres").required('Requerido'),
@@ -40,14 +37,12 @@ const formatDateToAPI = (param) => {
 }
 
 const Index = () => {
-  const searchResults = useSelector(resultsFlightsData);
   const isLoading = useSelector(isLoadingResultsFlights);
-  const error = useSelector(resultsFlightsError);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [token, setToken] = useState('');
+  const [error, setError] = useState({});
 
   const handleSubmit = (values) => {
     // para el layout
@@ -82,6 +77,8 @@ const Index = () => {
       setError(error);
     }
   }
+
+  // console.log(handleSubmit, getTokenAmadeus);
 
   useEffect(() => {
     getTokenAmadeus();
