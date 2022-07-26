@@ -1,7 +1,7 @@
 # buscador-vuelos
 Buscador de vuelos creado con React para Bootcamp de Código Facilito
 
-## Pasos [ara probar proyecto
+## Pasos para probar proyecto
 
 1. Quitar el ".example" del arhivo .env.example.
 
