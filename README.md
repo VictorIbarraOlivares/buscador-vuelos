@@ -1,11 +1,11 @@
 # buscador-vuelos
 Buscador de vuelos creado con React para Bootcamp de Código Facilito
 
-## Pasos ara probar proyecto
+## Pasos [ara probar proyecto
 
 1. Quitar el ".example" del arhivo .env.example.
 
-2. Completar las variables de entorno con las credenciales de Amadeus Api:
+2. Completar las variables de entorno con las credenciales de Amadeus Api
 
 **VITE_CLIENT_ID**
 
