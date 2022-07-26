@@ -17,7 +17,7 @@ const newSearchSchema = Yup.object({
   ida: Yup.date().required('Requerido'),
   regreso: Yup.date().min(
     Yup.ref('ida'),
-    "La fecha de regreso debe ser posterior a la fecha de ida"
+    "La fecha de regreso debe ser igual o posterior a la fecha de ida"
   ),
   adultos: Yup.number().max(8),
   boys: Yup.number().when("adultos", adultos => {
