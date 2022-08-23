@@ -1,9 +1,22 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { PaperAirplaneIcon, CalendarIcon, UsersIcon } from "@heroicons/react/solid";
-import { formatMoney, formatDate } from "../utils/helpers";
+// import {  formatDate } from "../utils/helpers";
 
 
 const FlightOfferItem = ({ flightOffer, onClick, getCarrier }) => {
+  const formatMoney = useCallback(() => {
+    return new Intl.NumberFormat("es-CL",
+    {
+      style: 'currency',
+      currency: flightOffer.price.currency,
+    }).format(flightOffer.price.total);
+  }, [flightOffer.price.currency, flightOffer.price.total,])
+
+  const formatDate = useCallback(() => {
+    const date = new Date(flightOffer.lastTicketingDate);
+    return date.toLocaleDateString("es-CL", { day: 'numeric' }) + " " + date.toLocaleDateString("es-CL", { month: 'long' }).toLowerCase().replace(/\w/, firstLetter => firstLetter.toUpperCase()) + " " + date.toLocaleDateString("es-CL", { year: 'numeric' });
+  }, [flightOffer.lastTicketingDate])
+  
   return (
     <>
       <li className="bg-white hover:bg-gray-100 hover:opacity-90 shadow-md shadow-indigo-600 overflow-hidden rounded-md px-4 py-2">
@@ -18,7 +31,8 @@ const FlightOfferItem = ({ flightOffer, onClick, getCarrier }) => {
               </p>
               <div className="ml-2 flex-shrink-0 flex">
                 <p className="px-2 inline-flex text-s leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  {formatMoney(flightOffer.price.currency, flightOffer.price.total)}
+                  {/* {formatMoney(flightOffer.price.currency, flightOffer.price.total)} */}
+                  {formatMoney()}
                 </p>
               </div>
             </div>
@@ -32,7 +46,7 @@ const FlightOfferItem = ({ flightOffer, onClick, getCarrier }) => {
                 <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                   <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
                   <span className="text-gray-700 font-semibold">
-                    Último día para reservar {formatDate(flightOffer.lastTicketingDate)}
+                    Último día para reservar {formatDate()}
                   </span>
                 </div>
               </div>
