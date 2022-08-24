@@ -4,7 +4,7 @@ export const locationsOptions = locationsData.map((location) => {
   return { value: `${location?.code}`, label: `${location?.name}, ${location?.state} - ${location?.country}` };
 })
 
-export const formatMoney = (currency, amount) => {
+export const formatMoney = (currency = 'USD', amount = 0) => {
   return new Intl.NumberFormat("es-CL",
     {
       style: 'currency',

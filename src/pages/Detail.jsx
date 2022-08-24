@@ -8,15 +8,17 @@ import {
 } from "../redux/slices/detail";
 import { PaperAirplaneIcon, UserIcon } from '@heroicons/react/solid'
 import { resultsFlightsDictionaries } from "../redux/slices/results";
-import { 
-  locationsOptions, 
+import {
+  locationsOptions,
   formatDate,
   getLocation,
   formatTime,
   formatDuration,
   getTypeTraveler,
   formatMoney
- } from "../utils/helpers";
+} from "../utils/helpers";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Detail = () => {
   const flightOffer = useSelector(flightDetailData);
@@ -24,9 +26,28 @@ const Detail = () => {
   const isLoading = useSelector(isLoadingFlightDetail);
   const error = useSelector(flightDetailError);
 
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const { origen, destino, ida, regreso, adultos, boys } = state ? state : {};
+
   const getCarrier = (code) => {
     return dictionaries.carriers[code] ? dictionaries.carriers[code].toLowerCase() : code;
   }
+
+  useEffect(() => {
+    if (Object.keys(flightOffer).length === 0) {
+      navigate('/flight-offers', {
+        state: {
+          origen: origen,
+          destino: destino,
+          ida: ida,
+          regreso: regreso,
+          adultos: adultos,
+          boys: boys
+        }
+      });
+    }
+  }, [])
 
   if (isLoading) {
     return (
@@ -37,7 +58,7 @@ const Detail = () => {
   }
   if (Object.keys(error).length !== 0) {
     return (
-      <span className="text-red-500 my-auto mr-4 font-medium">Ha ocurrido un error en itinerario</span>
+      <span className="text-red-500 my-auto mr-4 font-medium">Ha ocurrido un error en el itinerario</span>
     )
   }
 
@@ -47,7 +68,7 @@ const Detail = () => {
         <div className="min-h-full">
           <main>
             <div className="max-w-3xl mx-auto grid grid-rows-1 gap-1 grid-flow-row lg:gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
-              {flightOffer.itineraries.map((item, itemIdx) => (
+              {flightOffer?.itineraries?.map((item, itemIdx) => (
                 <section key={'item' + itemIdx} aria-labelledby="itinerarios-title" className="lg:col-start-1 lg:col-span-2 lg:mb-3">
                   <div className="bg-white px-4 py-5 shadow shadow-indigo-400 sm:rounded-lg sm:px-6">
                     <h2 id="itinerarios-title" className="text-lg font-medium text-gray-900">
@@ -164,10 +185,10 @@ const Detail = () => {
               <section aria-labelledby="total-title" className=" lg:col-span-1 sm:mb-5 order-first">
                 <div className="bg-white px-4 py-5 shadow shadow-indigo-400 sm:rounded-lg sm:px-6">
                   <h2 id="total-title" className="text-lg font-medium text-gray-900">
-                    Total <span className="float-right"> {formatMoney(flightOffer.price.currency, flightOffer.price.total)}</span>
+                    Total <span className="float-right"> {formatMoney(flightOffer?.price?.currency, flightOffer?.price?.total)}</span>
                   </h2>
                   <ul role="list" className="mt-2">
-                    {flightOffer.travelerPricings.map((travelerPricing, travelerPricingIdx) => (
+                    {flightOffer?.travelerPricings?.map((travelerPricing, travelerPricingIdx) => (
                       <li key={'travelerPricing' + travelerPricingIdx} className="py-3">
                         <div className="relative pb-3">
                           <div className="relative flex space-x-3">
